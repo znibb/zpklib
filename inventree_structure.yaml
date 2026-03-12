@@ -1,0 +1,258 @@
+# Name of the parameter template whose value is used as the KiCad symbol for each part.
+# Written to the KICAD_SYMBOL_PARAMETER plugin setting.
+kicad_symbol_parameter: Symbol_ConnectorPower
+
+top_category:
+  name: kicad-parts
+  description: Atomic parts for use in KiCad
+  structural: true
+
+top_level_params:
+  - Manufacturer
+  - MPN
+  - MountingTypes
+  - ValueAlternate
+  - ValueStandard
+
+selection_lists:
+  - name: CapacitorDielectrics
+    description: Capacitor dialectric types
+    entries: [X5R, X7R, C0G/NP0]
+
+  - name: ConnectorGenders
+    description: Connector genders
+    entries: [Male, Female, Hermaphroditic]
+
+  - name: MountingTypes
+    description: Surface Mount / Through Hole
+    entries: [SMT, THT]
+
+# Symbol selection lists are derived from .kicad_sym files at runtime.
+# Each entry specifies the list name, description, and the symbol file path (relative to repo root).
+symbol_selection_lists:
+  - name: Symbols_ConnectorPower
+    description: Power connector symbols
+    symbol_file: connector_power.kicad_sym
+
+# Package selection lists are derived from footprint directories at runtime.
+# Each entry specifies the list name, description, and the footprint pretty directory.
+package_selection_lists:
+  - name: Packages_Capacitor
+    description: Capacitor packages
+    pretty_dir: capacitor.pretty
+
+  - name: Packages_CapacitorPolarized
+    description: Polarized capacitor packages
+    pretty_dir: capacitor_polarized.pretty
+
+  - name: Packages_ConnectorPower
+    description: Power connectors
+    pretty_dir: connector_power.pretty
+
+  - name: Packages_Inductor
+    description: Inductor packages
+    pretty_dir: inductor.pretty
+
+  - name: Packages_Resistor
+    description: Resitor packages
+    pretty_dir: resistor.pretty
+
+  - name: Packages_ResistorVariable
+    description: Variable resitor packages
+    pretty_dir: resistor_variable.pretty
+
+# Parameter templates.
+# unit: omit or leave empty for dimensionless
+# checkbox: omit to default to false
+# selectionlist: name of a selection list, omit for free-text
+parameter_templates:
+  - name: Case
+    description: Standard package label
+
+  - name: ConnectorGender
+    description: Connector gender
+    selectionlist: ConnectorGenders
+
+  - name: CurrentRating
+    description: Current rating
+    unit: A
+
+  - name: CurrentSaturation
+    description: Saturation current
+    unit: A
+
+  - name: DCR
+    description: DC Resistance
+    unit: Ω
+
+  - name: Dielectric
+    description: Capacitor dielectric type
+    selectionlist: CapacitorDielectrics
+
+  - name: Manufacturer
+    description: Manufacturer name
+
+  - name: MountingTypes
+    description: Surface Mount / Through Hole
+    selectionlist: MountingTypes
+
+  - name: MPN
+    description: Manufacturer Part Number
+
+  - name: Package_Capacitor
+    description: Capacitor package
+    selectionlist: Packages_Capacitor
+
+  - name: Package_CapacitorPolarized
+    description: Polarized capacitor package
+    selectionlist: Packages_CapacitorPolarized
+  
+  - name: Package_ConnectorPower
+    description: Power connector package
+    selectionlist: Packages_ConnectorPower
+
+  - name: Symbol_ConnectorPower
+    description: Power connector symbol
+    selectionlist: Symbols_ConnectorPower
+
+  - name: Package_Inductor
+    description: Inductor package
+    selectionlist: Packages_Inductor
+
+  - name: Package_Resistor
+    description: Resistor package
+    selectionlist: Packages_Resistor
+
+  - name: Package_ResistorVariable
+    description: Variable resistor package
+    selectionlist: Packages_ResistorVariable
+
+  - name: PowerDecimal
+    description: Power rating, decimal
+    unit: W
+
+  - name: PowerFractional
+    description: Power rating, fractional
+    unit: W
+
+  - name: Shielded
+    description: Package shielding
+    checkbox: true
+
+  - name: TemperatureMax
+    description: Temperature rating, max
+    unit: °C
+
+  - name: TemperatureMin
+    description: Temperature rating, min
+    unit: °C
+
+  - name: Tolerance
+    description: Value tolerance
+    unit: "%"
+
+  - name: ValueAlternate
+    description: Component value, compact notation
+
+  - name: ValueStandard
+    description: Component value, decimal notation
+
+  - name: VoltageRating
+    description: Voltage rating
+    unit: V
+
+subcategories:
+  - name: Capacitor
+    description: Ceramic, fixed value
+    icon: ti:circuit-capacitor:outline
+    params:
+      - Case
+      - Dielectric
+      - Package_Capacitor
+      - TemperatureMax
+      - TemperatureMin
+      - Tolerance
+      - VoltageRating
+    kicad:
+      default_symbol: capacitor:Capacitor
+      default_reference: C
+      footprint_param: Package_Capacitor
+
+  - name: CapacitorPolarized
+    description: Polarized, fixed value
+    icon: ti:circuit-capacitor-polarized:outline
+    params:
+      - Dielectric
+      - Package_CapacitorPolarized
+      - TemperatureMax
+      - TemperatureMin
+      - Tolerance
+      - VoltageRating
+    kicad:
+      default_symbol: capacitor:CapacitorPolarized
+      default_reference: CP
+      footprint_param: Package_CapacitorPolarized
+  
+  - name: ConnectorPower
+    description: Power connectors
+    icon: ti:plug:outline
+    params:
+      - ConnectorGender
+      - CurrentRating
+      - Package_ConnectorPower
+      - Symbol_ConnectorPower
+      - TemperatureMax
+      - TemperatureMin
+      - VoltageRating
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: J
+      footprint_param: Package_ConnectorPower
+
+  - name: Inductor
+    description: Fixed value
+    icon: ti:circuit-inductor:outline
+    params:
+      - CurrentRating
+      - CurrentSaturation
+      - DCR
+      - Package_Inductor
+      - Shielded
+      - TemperatureMax
+      - TemperatureMin
+      - Tolerance
+    kicad:
+      default_symbol: inductor:Inductor
+      default_reference: L
+      footprint_param: Package_Inductor
+
+  - name: Resistor
+    description: Fixed value
+    icon: ti:circuit-resistor:outline
+    params:
+      - Case
+      - Package_Resistor
+      - PowerDecimal
+      - PowerFractional
+      - TemperatureMax
+      - TemperatureMin
+      - Tolerance
+    kicad:
+      default_symbol: resistor:Resistor
+      default_reference: R
+      footprint_param: Package_Resistor
+
+  - name: ResistorVariable
+    description: Variable value, potentiometer
+    icon: ti:circuit-resistor:outline
+    params:
+      - Package_ResistorVariable
+      - PowerDecimal
+      - PowerFractional
+      - TemperatureMax
+      - TemperatureMin
+      - Tolerance
+    kicad:
+      default_symbol: resistor:ResistorVariable
+      default_reference: RV
+      footprint_param: Package_ResistorVariable

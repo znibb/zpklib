@@ -1,3 +1,11 @@
+# configured httplib file contains API token
 zpklib.kicad_httplib
+
+# dev env file contains sensitive data
 dev/.env
+
+# persistent stack storage
 dev/inventree-data
+
+# kicad automatic backups
+*.bak

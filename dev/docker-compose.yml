@@ -1,0 +1,90 @@
+services:
+    # Database service
+    # Use PostgreSQL as the database backend
+    db:
+        image: postgres:17
+        container_name: inventree-db
+        restart: unless-stopped
+        environment:
+            - PGDATA=/var/lib/postgresql/data/pgdb
+            - POSTGRES_USER=${INVENTREE_DB_USER:?You must provide the 'INVENTREE_DB_USER' variable in the .env file}
+            - POSTGRES_PASSWORD=${INVENTREE_DB_PASSWORD:?You must provide the 'INVENTREE_DB_PASSWORD' variable in the .env file}
+            - POSTGRES_DB=${INVENTREE_DB_NAME:?You must provide the 'INVENTREE_DB_NAME' variable in the .env file}
+        networks:
+            - inventree
+        volumes:
+            # Map 'data' volume such that postgres database is stored externally
+            - ${INVENTREE_EXT_VOLUME:?You must specify the 'INVENTREE_EXT_VOLUME' variable in the .env file!}:/var/lib/postgresql/data/:z
+
+    # redis acts as database cache manager
+    cache:
+        image: valkey/valkey:8.1.2-alpine
+        container_name: inventree-cache
+        env_file:
+            - .env
+        networks:
+            - inventree
+        restart: always
+
+    # InvenTree web server service
+    # Uses gunicorn as the web server
+    server:
+        # https://hub.docker.com/r/inventree/inventree
+        image: inventree/inventree:${INVENTREE_TAG:-stable}
+        container_name: inventree-server
+        restart: unless-stopped
+        env_file:
+            - .env
+        networks:
+            - inventree
+        ports:
+            - 8000:8000
+        volumes:
+            # Data volume must map to /home/inventree/data
+            - ${INVENTREE_EXT_VOLUME}:/home/inventree/data:z
+        depends_on:
+            - db
+            - cache
+
+    # Background worker process handles long-running or periodic tasks
+    worker:
+        # If you wish to specify a particular InvenTree version, do so here
+        image: inventree/inventree:${INVENTREE_TAG:-stable}
+        container_name: inventree-worker
+        command: invoke worker
+        depends_on:
+            - server
+        env_file:
+            - .env
+        networks:
+            - inventree
+        volumes:
+            # Data volume must map to /home/inventree/data
+            - ${INVENTREE_EXT_VOLUME}:/home/inventree/data:z
+        restart: unless-stopped
+
+    # caddy acts as reverse proxy and static file server
+    # https://hub.docker.com/_/caddy
+    proxy:
+        container_name: inventree-proxy
+        image: caddy:alpine
+        restart: always
+        depends_on:
+            - server
+        env_file:
+            - .env
+        networks:
+            - inventree
+        ports:
+            - 80:80
+        volumes:
+            - ./files/Caddyfile:/etc/caddy/Caddyfile:ro,z
+            - ${INVENTREE_EXT_VOLUME}/static:/var/www/static:z
+            - ${INVENTREE_EXT_VOLUME}/media:/var/www/media:z
+            - ${INVENTREE_EXT_VOLUME}:/var/log:z
+            - ${INVENTREE_EXT_VOLUME}:/data:z
+            - ${INVENTREE_EXT_VOLUME}:/config:z
+
+networks:
+    inventree:
+        name: inventree

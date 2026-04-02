@@ -42,6 +42,10 @@ symbol_selection_lists:
     description: Power connector symbols
     symbol_file: connector_power.kicad_sym
 
+  - name: Symbols_Sensor
+    description: Sensor symbols
+    symbol_file: sensor.kicad_sym
+
 # Package selection lists are derived from footprint directories at runtime.
 # Each entry specifies the list name, description, and the footprint pretty directory.
 package_selection_lists:
@@ -123,9 +127,16 @@ parameter_templates:
     description: Power connector package
     selectionlist: Packages_ConnectorPower
 
+  - name: Symbol
+    description: KiCad symbol
+
   - name: Symbol_ConnectorPower
     description: Power connector symbol
     selectionlist: Symbols_ConnectorPower
+
+  - name: Symbol_Sensor
+    description: Sensor symbol
+    selectionlist: Symbols_Sensor
 
   - name: Package_Inductor
     description: Inductor package
@@ -283,6 +294,8 @@ subcategories:
     icon: ti:cpu:outline
     params:
       - Package_Sensor
+      - Symbol
+      - Symbol_Sensor
       - TemperatureMax
       - TemperatureMin
     kicad:

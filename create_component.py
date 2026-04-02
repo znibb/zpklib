@@ -14,9 +14,11 @@ Connection details are read automatically from zpklib.kicad_httplib.
 
 import io
 import json
+import os
 import re
 import sys
 from pathlib import Path
+from urllib.parse import urlparse
 
 import requests
 
@@ -58,13 +60,24 @@ def api_post(path, data):
     return r.json()
 
 
-def api_upload(path, fields, file_bytes, filename):
+_MIME_TO_EXT = {
+    "application/pdf":          ".pdf",
+    "image/png":                ".png",
+    "image/jpeg":               ".jpg",
+    "image/gif":                ".gif",
+    "image/webp":               ".webp",
+    "application/zip":          ".zip",
+    "application/x-zip-compressed": ".zip",
+}
+
+
+def api_upload(path, fields, file_bytes, filename, mime_type="application/octet-stream"):
     """POST multipart form data with a single file attachment."""
     r = requests.post(
         f"{BASE_URL}/{path}",
         headers=AUTH_HEADERS,  # no Content-Type — requests sets it with boundary
         data=fields,
-        files={"attachment": (filename, io.BytesIO(file_bytes), "application/pdf")},
+        files={"attachment": (filename, io.BytesIO(file_bytes), mime_type)},
     )
     if not r.ok:
         print(f"ERROR {r.status_code}: {r.text}", file=sys.stderr)
@@ -73,14 +86,36 @@ def api_upload(path, fields, file_bytes, filename):
 
 
 def download_datasheet(url):
-    """Download a file from url and return its bytes, or None on failure."""
+    """Download a file from url and return (bytes, extension, mime_type), or (None, None, None)."""
     try:
         r = requests.get(url, timeout=60)
         r.raise_for_status()
-        return r.content
     except requests.RequestException as e:
         print(f"  Warning: could not download datasheet: {e}", file=sys.stderr)
-        return None
+        return None, None, None
+
+    mime_type = r.headers.get("Content-Type", "application/octet-stream").split(";")[0].strip()
+
+    # 1. Try Content-Disposition filename
+    ext = None
+    content_disp = r.headers.get("Content-Disposition", "")
+    if "filename=" in content_disp:
+        fname = content_disp.split("filename=")[-1].strip().strip("\"'")
+        _, ext = os.path.splitext(fname)
+
+    # 2. Map MIME type to extension
+    if not ext:
+        ext = _MIME_TO_EXT.get(mime_type)
+
+    # 3. Fall back to URL path extension
+    if not ext:
+        _, ext = os.path.splitext(urlparse(url).path)
+
+    # 4. Last resort
+    if not ext:
+        ext = ".bin"
+
+    return r.content, ext.lower(), mime_type
 
 
 def as_list(data):
@@ -450,6 +485,15 @@ def main():
     if manufacturer_pk is not None:
         pre_filled_pks.add(manufacturer_pk)
 
+    # Generic symbol pk — used by KiCad plugin; written alongside the category-specific Symbol_* param.
+    symbol_pk = next((t["pk"] for t in templates if t["name"] == "Symbol"), None)
+    # Category-specific symbol selector (e.g. Symbol_ConnectorPower, Symbol_Sensor).
+    symbol_specific_pk = next((t["pk"] for t in templates if t["name"].startswith("Symbol_")), None)
+    if symbol_pk is not None:
+        pre_filled_pks.add(symbol_pk)
+    if symbol_specific_pk is not None:
+        pre_filled_pks.add(symbol_specific_pk)
+
     print(f"\n--- New part in '{category['name']}' ---")
     mpn = input("MPN (required): ").strip().replace("/", "-")
     if not mpn:
@@ -511,6 +555,13 @@ def main():
             param_values[case_pk] = m.group(1)
             print(f"  Case auto-set to: {m.group(1)}")
 
+    if symbol_specific_pk is not None:
+        sym_tmpl = next(t for t in templates if t["pk"] == symbol_specific_pk)
+        symbol_val = prompt_parameter(sym_tmpl, entries_by_list)
+        param_values[symbol_specific_pk] = symbol_val
+        if symbol_pk is not None:
+            param_values[symbol_pk] = symbol_val  # feed generic Symbol used by KiCad plugin
+
     remaining = [t for t in templates if t["pk"] not in pre_filled_pks]
     if remaining:
         print("\nParameter values:")
@@ -526,9 +577,7 @@ def main():
     print(f"  Manufacturer:{manufacturer}")
     print(f"  Description: {description}")
     if datasheet_url:
-        ds_filename = f"{manufacturer}-{mpn}-datasheet.pdf"
         print(f"  Datasheet:   {datasheet_url}")
-        print(f"  → will be saved as: {ds_filename}")
     print(f"  Value:       {value_std or '(empty)'}" + (f"  →  {value_alt}" if value_alt else ""))
     if is_resistor and (power_dec_pk is not None or power_frac_pk is not None):
         power_summary = power_dec or '(empty)'
@@ -583,15 +632,16 @@ def main():
     # Step 9: Upload datasheet attachment
     # ------------------------------------------------------------------
     if datasheet_url:
-        ds_filename = f"{manufacturer}-{mpn}-datasheet.pdf"
         print(f"\nDownloading datasheet from {datasheet_url} ...")
-        pdf_bytes = download_datasheet(datasheet_url)
-        if pdf_bytes:
+        file_bytes, file_ext, mime_type = download_datasheet(datasheet_url)
+        if file_bytes:
+            ds_filename = f"{manufacturer}-{mpn}-datasheet{file_ext}"
             api_upload(
                 "attachment/",
                 {"model_type": "part", "model_id": part_pk, "comment": "datasheet"},
-                pdf_bytes,
+                file_bytes,
                 ds_filename,
+                mime_type,
             )
             print(f"  Uploaded attachment: {ds_filename}")
         else:

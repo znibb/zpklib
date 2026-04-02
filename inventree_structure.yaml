@@ -1,6 +1,6 @@
 # Name of the parameter template whose value is used as the KiCad symbol for each part.
 # Written to the KICAD_SYMBOL_PARAMETER plugin setting.
-kicad_symbol_parameter: Symbol_ConnectorPower
+kicad_symbol_parameter: Symbol
 
 top_category:
   name: kicad-parts
@@ -26,6 +26,14 @@ selection_lists:
   - name: MountingTypes
     description: Surface Mount / Through Hole
     entries: [SMT, THT]
+
+  - name: SensorOutputs
+    description: Sensor outputs
+    entries: [I2C]
+  
+  - name: SensorTypes
+    description: Sensor types
+    entries: [Power monitoring]
 
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).
@@ -60,6 +68,10 @@ package_selection_lists:
   - name: Packages_ResistorVariable
     description: Variable resitor packages
     pretty_dir: resistor_variable.pretty
+
+  - name: Packages_Sensor
+    description: Sensor packages
+    pretty_dir: package_SO.pretty
 
 # Parameter templates.
 # unit: omit or leave empty for dimensionless
@@ -127,6 +139,10 @@ parameter_templates:
     description: Variable resistor package
     selectionlist: Packages_ResistorVariable
 
+  - name: Package_Sensor
+    description: Sensor package
+    selectionlist: Packages_Sensor
+
   - name: PowerDecimal
     description: Power rating, decimal
     unit: W
@@ -134,6 +150,10 @@ parameter_templates:
   - name: PowerFractional
     description: Power rating, fractional
     unit: W
+
+  - name: SensorType
+    description: Sensor type
+    selectionlist: SensorTypes
 
   - name: Shielded
     description: Package shielding
@@ -200,6 +220,7 @@ subcategories:
       - ConnectorGender
       - CurrentRating
       - Package_ConnectorPower
+      - Symbol
       - Symbol_ConnectorPower
       - TemperatureMax
       - TemperatureMin
@@ -256,3 +277,15 @@ subcategories:
       default_symbol: resistor:ResistorVariable
       default_reference: RV
       footprint_param: Package_ResistorVariable
+
+  - name: Sensor
+    description: Sensors
+    icon: ti:cpu:outline
+    params:
+      - Package_Sensor
+      - TemperatureMax
+      - TemperatureMin
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_Sensor

@@ -15,6 +15,10 @@ top_level_params:
   - ValueStandard
 
 selection_lists:
+  - name: ActuatorOrientations
+    description: Actuator orientation
+    entries: [Side Actuated, Top Actuated]
+
   - name: CapacitorDielectrics
     description: Capacitor dialectric types
     entries: [X5R, X7R, C0G/NP0]
@@ -35,6 +39,10 @@ selection_lists:
     description: Sensor types
     entries: [Power monitoring]
 
+  - name: SwitchFunctions
+    description: Switch functions
+    entries: [Off-Mom, Off-Mom-Mom, On-Mom, On-Mom_Off-Mom, On-On]
+
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).
 symbol_selection_lists:
@@ -45,6 +53,10 @@ symbol_selection_lists:
   - name: Symbols_Sensor
     description: Sensor symbols
     symbol_file: sensor.kicad_sym
+
+  - name: Symbols_Switch
+    description: Switch symbols
+    symbol_file: switch.kicad_sym
 
 # Package selection lists are derived from footprint directories at runtime.
 # Each entry specifies the list name, description, and the footprint pretty directory.
@@ -77,11 +89,19 @@ package_selection_lists:
     description: Sensor packages
     pretty_dir: package_SO.pretty
 
+  - name: Packages_Switch
+    description: Switch packages
+    pretty_dir: switch.pretty
+
 # Parameter templates.
 # unit: omit or leave empty for dimensionless
 # checkbox: omit to default to false
 # selectionlist: name of a selection list, omit for free-text
 parameter_templates:
+  - name: ActuatorOrientation
+    description: Actuator orientation
+    selectionlist: ActuatorOrientations
+
   - name: Case
     description: Standard package label
 
@@ -105,14 +125,14 @@ parameter_templates:
     description: Capacitor dielectric type
     selectionlist: CapacitorDielectrics
 
-  - name: Manufacturer
+  - name: Manufacturer # top-level
     description: Manufacturer name
 
-  - name: MountingTypes
+  - name: MountingTypes # top-level
     description: Surface Mount / Through Hole
     selectionlist: MountingTypes
 
-  - name: MPN
+  - name: MPN # top-level
     description: Manufacturer Part Number
 
   - name: Package_Capacitor
@@ -126,17 +146,6 @@ parameter_templates:
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
-
-  - name: Symbol
-    description: KiCad symbol
-
-  - name: Symbol_ConnectorPower
-    description: Power connector symbol
-    selectionlist: Symbols_ConnectorPower
-
-  - name: Symbol_Sensor
-    description: Sensor symbol
-    selectionlist: Symbols_Sensor
 
   - name: Package_Inductor
     description: Inductor package
@@ -153,6 +162,10 @@ parameter_templates:
   - name: Package_Sensor
     description: Sensor package
     selectionlist: Packages_Sensor
+  
+  - name: Package_Switch
+    description: Switch package
+    selectionlist: Packages_Switch
 
   - name: PowerDecimal
     description: Power rating, decimal
@@ -161,6 +174,25 @@ parameter_templates:
   - name: PowerFractional
     description: Power rating, fractional
     unit: W
+
+  - name: SwitchFunction
+    description: Switch function
+    selectionlist: SwitchFunctions
+
+  - name: Symbol
+    description: KiCad symbol
+
+  - name: Symbol_ConnectorPower
+    description: Power connector symbol
+    selectionlist: Symbols_ConnectorPower
+
+  - name: Symbol_Sensor
+    description: Sensor symbol
+    selectionlist: Symbols_Sensor
+
+  - name: Symbol_Switch
+    description: Switch symbol
+    selectionlist: Symbols_Switch
 
   - name: SensorType
     description: Sensor type
@@ -182,10 +214,10 @@ parameter_templates:
     description: Value tolerance
     unit: "%"
 
-  - name: ValueAlternate
+  - name: ValueAlternate # top-level
     description: Component value, compact notation
 
-  - name: ValueStandard
+  - name: ValueStandard # top-level
     description: Component value, decimal notation
 
   - name: VoltageRating
@@ -302,3 +334,19 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_Sensor
+
+  - name: Switch
+    description: Switches
+    icon: ti:circuit-switch-open:outline
+    params:
+      - ActuatorOrientation
+      - CurrentRating
+      - Package_Switch
+      - Symbol
+      - Symbol_Switch
+      - TemperatureMax
+      - TemperatureMin
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: SW
+      footprint_param: Package_Switch

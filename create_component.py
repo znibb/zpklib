@@ -508,7 +508,7 @@ def main():
     datasheet_url = input("Datasheet URL (blank to skip): ").strip()
 
     is_resistor = reference in ("R", "RV") if reference else False
-    component_value = input("Value: ").strip()
+    component_value = input(f"Value (blank to use MPN '{mpn}'): ").strip() or mpn
     if '.' in component_value:
         # Standard format entered — derive alternate (fall back to identical copy)
         value_std = component_value

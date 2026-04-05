@@ -25,6 +25,14 @@ selection_lists:
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
 
+  - name: FuseCase
+    description: Fuse case
+    entries: [5x20mm]
+
+  - name: FuseType
+    description: Fuse type
+    entries: [Slow blow, Fast blow]
+
   - name: LED_Colours
     description: LED colour(s)
     entries: [Red/Yellow/Green]
@@ -59,6 +67,10 @@ symbol_selection_lists:
   - name: Symbols_ConnectorPower
     description: Power connector symbols
     symbol_file: connector_power.kicad_sym
+
+  - name: Symbols_Fuse
+    description: Fuse symbols
+    symbol_file: fuse.kicad_sym
 
   - name: Symbols_LED
     description: LED symbols
@@ -98,6 +110,14 @@ package_selection_lists:
   - name: Packages_Diode
     description: Diode packages
     pretty_dir: diode.pretty
+
+  - name: Packages_Fuse
+    description: Fuse packages
+    pretty_dir: fuse.pretty
+
+  - name: Packages_FuseHolder
+    description: Fuse holder packages
+    pretty_dir: fuse_holder.pretty
 
   - name: Packages_Inductor
     description: Inductor packages
@@ -193,6 +213,14 @@ parameter_templates:
     description: Diode package
     selectionlist: Packages_Diode
 
+  - name: Package_Fuse
+    description: Fuse package
+    selectionlist: Packages_Fuse
+
+  - name: Package_FuseHolder
+    description: Fuse holder package
+    selectionlist: Packages_FuseHolder
+
   - name: Package_Inductor
     description: Inductor package
     selectionlist: Packages_Inductor
@@ -266,6 +294,10 @@ parameter_templates:
   - name: Symbol_ConnectorPower
     description: Power connector symbol
     selectionlist: Symbols_ConnectorPower
+
+  - name: Symbol_Fuse
+    description: Fuse symbol
+    selectionlist: Symbols_Fuse
 
   - name: Symbol_LED
     description: LED symbol
@@ -382,6 +414,35 @@ subcategories:
       default_symbol: diode:DiodeRectifier
       default_reference: D
       footprint_param: Package_Diode
+
+  - name: Fuse
+    description: Fuse
+    icon: ti:shield:outline
+    params:
+      - CurrentRating
+      - FuseCase
+      - FuseType
+      - Package_Fuse
+      - Symbol
+      - Symbol_Fuse
+      - VoltageRating
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: F
+      footprint_param: Package_Fuse
+
+  - name: FuseHolder
+    description: Fuse holder
+    icon: ti:shield:outline
+    params:
+      - CurrentRating
+      - FuseCase
+      - Package_FuseHolder
+      - VoltageRating
+    kicad:
+      default_symbol: fuse_holder:FuseHolder
+      default_reference: FH
+      footprint_param: Package_FuseHolder
 
   - name: Inductor
     description: Fixed value

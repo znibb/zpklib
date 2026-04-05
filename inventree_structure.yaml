@@ -191,6 +191,12 @@ parameter_templates:
     description: Fuse type
     selectionlist: FuseTypes
 
+  - name: KicadExtraFields
+    description: Additional KiCad fields to show (comma-separated InvenTree parameter names)
+
+  - name: KicadHideFields
+    description: KiCad default fields to hide (comma-separated, e.g. "Value")
+
   - name: LED_Colour
     description: LED colour(s)
     selectionlist: LED_Colours
@@ -451,6 +457,7 @@ subcategories:
       default_symbol: fuse_holder:FuseHolder
       default_reference: FH
       footprint_param: Package_FuseHolder
+      hide_fields: "Value"
 
   - name: Inductor
     description: Fixed value
@@ -523,6 +530,7 @@ subcategories:
       default_symbol: resistor:Resistor
       default_reference: R
       footprint_param: Package_Resistor
+      show_extra_fields: "Case"
 
   - name: ResistorVariable
     description: Variable value, potentiometer

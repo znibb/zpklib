@@ -25,3 +25,20 @@ your resistors will show up under a symbol library named `zpklib - kicad-parts/R
 ## Adding components to categories
 1. Source the venv: `. .venv/bin/activate`
 1. Run `./create_component.py`
+
+## Customizing category symbols
+Kicad handles the default symbol fields `reference, value, footprint, datasheet, description, keywords` in it's own batch, showing `reference` and `value` while hiding the rest by default.  
+
+To hide any of the default fields add:  
+```
+kicad:
+    hide_fields: "FIELD_NAME"
+```
+to that category in `inventree_structure.yaml`.
+
+The rest of the symbol fields are considered "extra" fields. To make an extra field visible on the symbol add:
+```
+kivad:
+    show_extra_fields: "FIELD_NAME"
+```
+to that category in `inventree_structure.yaml`.

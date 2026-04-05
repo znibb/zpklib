@@ -159,14 +159,18 @@ def ancestor_pks(category, cats_by_pk):
 
 def fetch_templates_for_category(category, cats_by_pk):
     """
-    Return a list of parameter template dicts that apply to the given category,
-    including templates inherited from ancestor categories. Order: ancestors
-    first (broadest scope first), then the selected category's own params.
-    Deduplicates by template pk.
+    Return (templates, defaults) where:
+    - templates: list of parameter template dicts that apply to the given
+      category, including those inherited from ancestor categories. Order:
+      ancestors first (broadest scope first), then the selected category's
+      own params. Deduplicates by template pk.
+    - defaults: dict mapping template pk → default_value string from the
+      closest (most specific) ancestor category assignment.
     """
     cat_pks = list(reversed(ancestor_pks(category, cats_by_pk)))  # root → leaf
     templates_by_pk = {}
     ordered_pks = []
+    defaults = {}  # tmpl_pk → default_value; later (more specific) assignments win
 
     for cat_pk in cat_pks:
         assignments = as_list(
@@ -182,8 +186,9 @@ def fetch_templates_for_category(category, cats_by_pk):
                 tmpl = api_get(f"parameter/template/{tmpl_pk}/")
                 templates_by_pk[tmpl_pk] = tmpl
                 ordered_pks.append(tmpl_pk)
+            defaults[tmpl_pk] = a.get("default_value", "")
 
-    return [templates_by_pk[pk] for pk in ordered_pks]
+    return [templates_by_pk[pk] for pk in ordered_pks], defaults
 
 
 def fetch_selection_entries(templates):
@@ -442,7 +447,7 @@ def main():
     # Step 3: Fetch applicable parameters
     # ------------------------------------------------------------------
     print("Fetching parameters...")
-    templates = fetch_templates_for_category(category, cats_by_pk)
+    templates, param_defaults = fetch_templates_for_category(category, cats_by_pk)
 
     if not templates:
         print("  (no parameters defined)")
@@ -451,6 +456,11 @@ def main():
               + ", ".join(t["name"] for t in templates))
 
     entries_by_list = fetch_selection_entries(templates)
+
+    hide_fields_pk = next((t["pk"] for t in templates if t["name"] == "KicadHideFields"), None)
+    hide_fields_val = param_defaults.get(hide_fields_pk, "") if hide_fields_pk else None
+    extra_fields_pk = next((t["pk"] for t in templates if t["name"] == "KicadExtraFields"), None)
+    extra_fields_val = param_defaults.get(extra_fields_pk, "") if extra_fields_pk else None
 
     # ------------------------------------------------------------------
     # Step 4: Collect part info
@@ -489,6 +499,10 @@ def main():
             param_values[symbol_specific_pk] = symbol_val
             if symbol_pk is not None:
                 param_values[symbol_pk] = symbol_val
+        if hide_fields_pk is not None and hide_fields_val:
+            param_values[hide_fields_pk] = hide_fields_val
+        if extra_fields_pk is not None and extra_fields_val:
+            param_values[extra_fields_pk] = extra_fields_val
 
     else:
         mpn_tmpl_pk    = next((t["pk"] for t in templates if t["name"] == "MPN"), None)
@@ -526,6 +540,10 @@ def main():
             pre_filled_pks.add(symbol_pk)
         if symbol_specific_pk is not None:
             pre_filled_pks.add(symbol_specific_pk)
+        if hide_fields_pk is not None:
+            pre_filled_pks.add(hide_fields_pk)
+        if extra_fields_pk is not None:
+            pre_filled_pks.add(extra_fields_pk)
 
         mpn = input("MPN (required): ").strip().replace("/", "-")
         if not mpn:
@@ -564,6 +582,10 @@ def main():
         # Step 5: Collect parameter values
         # ------------------------------------------------------------------
         param_values = {}
+        if hide_fields_pk is not None and hide_fields_val:
+            param_values[hide_fields_pk] = hide_fields_val
+        if extra_fields_pk is not None and extra_fields_val:
+            param_values[extra_fields_pk] = extra_fields_val
         if mpn_tmpl_pk is not None:
             param_values[mpn_tmpl_pk] = mpn
         if manufacturer_pk is not None:
@@ -593,6 +615,13 @@ def main():
             param_values[symbol_specific_pk] = symbol_val
             if symbol_pk is not None:
                 param_values[symbol_pk] = symbol_val  # feed generic Symbol used by KiCad plugin
+            # Symbols ending in "Held" (e.g. FuseHeld) represent a part with no
+            # physical footprint — skip all Package_* prompts.
+            sym_name = symbol_val.split(":")[-1] if ":" in symbol_val else symbol_val
+            if sym_name.endswith("Held"):
+                for t in templates:
+                    if t["name"].startswith("Package_"):
+                        pre_filled_pks.add(t["pk"])
 
         remaining = [t for t in templates if t["pk"] not in pre_filled_pks]
         if remaining:

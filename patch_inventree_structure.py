@@ -242,37 +242,65 @@ def setup_parameter_templates(structure, selection_lists):
 # Step 4: Sub-categories + parameter assignments
 # ---------------------------------------------------------------------------
 
-def sync_category_params(category_pk, desired_template_pks):
-    """Add missing and remove extra directly-assigned params for a category."""
+def sync_category_params(category_pk, desired):
+    """Add, update, and remove directly-assigned params for a category.
+
+    desired: dict mapping template_pk → options dict with optional keys:
+        default_value (str, defaults to "")
+        inherited (bool, optional)
+    Also accepts a plain list/set of pks for backwards compatibility.
+    """
     if category_pk is None:
         return
-    # Filter out None pks that result from dry-run template creation
-    desired_set = {pk for pk in desired_template_pks if pk is not None}
+    # Normalise list/set input to dict form
+    if not isinstance(desired, dict):
+        desired = {pk: {} for pk in desired}
+    # Filter out None keys from dry-run template creation
+    desired = {pk: opts for pk, opts in desired.items() if pk is not None}
 
     all_existing = as_list(api_get(f"part/category/parameters/?category={category_pk}&limit=9999"))
-    direct = {e["template"]: e["pk"] for e in all_existing if e["category"] == category_pk}
+    direct = {e["template"]: e for e in all_existing if e["category"] == category_pk}
 
-    added = [pk for pk in desired_set if pk not in direct]
-    for tmpl_pk in added:
-        api_post("part/category/parameters/", {
-            "category": category_pk, "template": tmpl_pk, "default_value": "",
-        })
+    added = updated = 0
+    for tmpl_pk, opts in desired.items():
+        if tmpl_pk not in direct:
+            api_post("part/category/parameters/", {
+                "category": category_pk, "template": tmpl_pk,
+                "default_value": opts.get("default_value", ""),
+            })
+            added += 1
+        else:
+            existing = direct[tmpl_pk]
+            if "default_value" in opts and existing.get("default_value") != opts["default_value"]:
+                api_patch(f"part/category/parameters/{existing['pk']}/",
+                          {"default_value": opts["default_value"]})
+                updated += 1
 
-    removed = [asgn_pk for tmpl_pk, asgn_pk in direct.items() if tmpl_pk not in desired_set]
-    for asgn_pk in removed:
+    removed_pks = [e["pk"] for tmpl_pk, e in direct.items() if tmpl_pk not in desired]
+    for asgn_pk in removed_pks:
         api_delete(f"part/category/parameters/{asgn_pk}/")
 
-    if added or removed:
-        print(f"    params: {w('added', 'add')} {len(added)}, {w('removed', 'remove')} {len(removed)}")
+    if added or updated or removed_pks:
+        print(f"    params: {w('added', 'add')} {added}, "
+              f"{w('updated', 'update')} {updated}, "
+              f"{w('removed', 'remove')} {len(removed_pks)}")
 
 
 def setup_subcategories(structure, top_pk, templates):
     print("Step 4: Syncing sub-categories and parameters...")
 
+    tmpl_specs = {t["name"]: t for t in structure.get("parameter_templates", [])}
+
     top_name = structure["top_category"]["name"]
     print(f"  '{top_name}' (pk={top_pk}): syncing top-level params...")
-    top_tmpl_pks = [templates.get(n) for n in structure.get("top_level_params", [])]
-    sync_category_params(top_pk, top_tmpl_pks)
+    top_desired = {}
+    for name in structure.get("top_level_params", []):
+        pk = templates.get(name)
+        if pk is not None:
+            spec = tmpl_specs.get(name, {})
+            opts = {k: spec[k] for k in ("default_value",) if k in spec}
+            top_desired[pk] = opts
+    sync_category_params(top_pk, top_desired)
 
     existing_cats = {}
     if top_pk is not None:
@@ -302,8 +330,18 @@ def setup_subcategories(structure, top_pk, templates):
             print(f"  '{name}': {w('created', 'create')}" + (f" pk={cat_pk}" if cat_pk else ""))
 
         subcategory_pks[name] = cat_pk
-        tmpl_pks = [templates.get(n) for n in subcat.get("params", [])]
-        sync_category_params(cat_pk, tmpl_pks)
+        tmpl_desired = {templates.get(n): {} for n in subcat.get("params", [])
+                        if templates.get(n) is not None}
+        kicad = subcat.get("kicad", {})
+        if kicad and "hide_fields" in kicad:
+            hf_pk = templates.get("KicadHideFields")
+            if hf_pk is not None:
+                tmpl_desired[hf_pk] = {"default_value": kicad["hide_fields"]}
+        if kicad and "show_extra_fields" in kicad:
+            ef_pk = templates.get("KicadExtraFields")
+            if ef_pk is not None:
+                tmpl_desired[ef_pk] = {"default_value": kicad["show_extra_fields"]}
+        sync_category_params(cat_pk, tmpl_desired)
 
     return subcategory_pks
 

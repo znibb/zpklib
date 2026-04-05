@@ -64,6 +64,10 @@ symbol_selection_lists:
     description: LED symbols
     symbol_file: led.kicad_sym
 
+  - name: Symbols_Power
+    description: Power symbols
+    symbol_file: power_symbol.kicad_sym
+
   - name: Symbols_Relay
     description: Relay symbols
     symbol_file: relay.kicad_sym
@@ -225,6 +229,9 @@ parameter_templates:
     description: Power rating, fractional
     unit: W
 
+  - name: PowerSymbolNetName
+    description: Net name
+
   - name: RelayCoilType
     description: Relay coil type
     selectionlist: RelayCoilTypes
@@ -263,6 +270,10 @@ parameter_templates:
   - name: Symbol_LED
     description: LED symbol
     selectionlist: Symbols_LED
+
+  - name: Symbol_Power
+    description: Power symbol
+    selectionlist: Symbols_Power
 
   - name: Symbol_Relay
     description: Relay symbol
@@ -399,6 +410,18 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: D
       footprint_param: Package_LED
+
+  - name: PowerSymbol
+    description: Power symbols
+    icon: ti:circuit-ground:outline
+    params:
+      - PowerSymbolNetName
+      - Symbol
+      - Symbol_Power
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: "#PWR"
+      value_param: PowerSymbolNetName
 
   - name: Relay
     description: Relays

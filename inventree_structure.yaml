@@ -7,6 +7,8 @@ top_level_params:
   - Manufacturer
   - MPN
   - MountingTypes
+  - TemperatureMax
+  - TemperatureMin
   - ValueAlternate
   - ValueStandard
 
@@ -222,11 +224,11 @@ parameter_templates:
     description: Package shielding
     checkbox: true
 
-  - name: TemperatureMax
+  - name: TemperatureMax # top-level
     description: Temperature rating, max
     unit: °C
 
-  - name: TemperatureMin
+  - name: TemperatureMin # top-level
     description: Temperature rating, min
     unit: °C
 
@@ -252,8 +254,6 @@ subcategories:
       - Case
       - Dielectric
       - Package_Capacitor
-      - TemperatureMax
-      - TemperatureMin
       - Tolerance
       - VoltageRating
     kicad:
@@ -267,8 +267,6 @@ subcategories:
     params:
       - Dielectric
       - Package_CapacitorPolarized
-      - TemperatureMax
-      - TemperatureMin
       - Tolerance
       - VoltageRating
     kicad:
@@ -285,8 +283,6 @@ subcategories:
       - Package_ConnectorPower
       - Symbol
       - Symbol_ConnectorPower
-      - TemperatureMax
-      - TemperatureMin
       - VoltageRating
     kicad:
       default_symbol: placeholder:BlankSymbol
@@ -302,8 +298,6 @@ subcategories:
       - DCR
       - Package_Inductor
       - Shielded
-      - TemperatureMax
-      - TemperatureMin
       - Tolerance
     kicad:
       default_symbol: inductor:Inductor
@@ -318,8 +312,6 @@ subcategories:
       - Package_LED
       - Symbol
       - Symbol_LED
-      - TemperatureMax
-      - TemperatureMin
     kicad:
       default_symbol: placeholder:BlankSymbol
       default_reference: D
@@ -333,8 +325,6 @@ subcategories:
       - Package_Resistor
       - PowerDecimal
       - PowerFractional
-      - TemperatureMax
-      - TemperatureMin
       - Tolerance
     kicad:
       default_symbol: resistor:Resistor
@@ -348,8 +338,6 @@ subcategories:
       - Package_ResistorVariable
       - PowerDecimal
       - PowerFractional
-      - TemperatureMax
-      - TemperatureMin
       - Tolerance
     kicad:
       default_symbol: resistor:ResistorVariable
@@ -363,8 +351,6 @@ subcategories:
       - Package_Sensor
       - Symbol
       - Symbol_Sensor
-      - TemperatureMax
-      - TemperatureMin
     kicad:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
@@ -379,8 +365,6 @@ subcategories:
       - Package_Switch
       - Symbol
       - Symbol_Switch
-      - TemperatureMax
-      - TemperatureMin
     kicad:
       default_symbol: placeholder:BlankSymbol
       default_reference: SW

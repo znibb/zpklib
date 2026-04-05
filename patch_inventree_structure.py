@@ -329,20 +329,23 @@ def setup_kicad_mappings(structure, subcategory_pks, templates):
         if cat_pk is None:
             print(f"  '{name}': {w('created', 'create')} kicad mapping (category pk unknown)")
             continue
+        value_param_name = kicad.get("value_param", "ValueStandard")
         desired = {
             "default_symbol": kicad["default_symbol"],
             "default_reference": kicad["default_reference"],
-            "default_value_parameter_template": value_tmpl_pk,
-            "footprint_parameter_template": templates.get(kicad["footprint_param"]),
+            "default_value_parameter_template": templates.get(value_param_name),
+            "footprint_parameter_template": templates.get(kicad.get("footprint_param")),
         }
         if cat_pk in existing_by_cat:
             existing = existing_by_cat[cat_pk]
             kicad_pk = existing["pk"]
+            val_tmpl = existing["default_value_parameter_template"]
+            fp_tmpl = existing["footprint_parameter_template"]
             current = {
                 "default_symbol": existing["default_symbol"],
                 "default_reference": existing["default_reference"],
-                "default_value_parameter_template": existing["default_value_parameter_template"]["id"],
-                "footprint_parameter_template": existing["footprint_parameter_template"]["id"],
+                "default_value_parameter_template": val_tmpl["id"] if val_tmpl else None,
+                "footprint_parameter_template": fp_tmpl["id"] if fp_tmpl else None,
             }
             if desired != current:
                 api_patch(f"category/{kicad_pk}/", desired, base=PLUGIN_URL)

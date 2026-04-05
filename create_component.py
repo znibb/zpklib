@@ -217,12 +217,13 @@ def fetch_kicad_reference(category_pk):
 _IPN_RE = re.compile(r"^(.+)-(\d{5})$")
 
 
-def next_ipn(reference, category_pk):
+def next_ipn(reference):
     """
-    Scan all parts in the category for IPNs matching '<reference>-NNNNN' and
-    return the next serial as a formatted IPN string, e.g. 'C-00042'.
+    Scan all parts globally for IPNs matching '<reference>-NNNNN' and return
+    the next serial as a formatted IPN string, e.g. 'C-00042'.
+    Global search ensures IPN uniqueness across categories sharing a prefix.
     """
-    parts = as_list(api_get(f"part/?category={category_pk}&limit=9999"))
+    parts = as_list(api_get(f"part/?limit=9999"))
     max_serial = 0
     prefix = f"{reference}-"
     for part in parts:
@@ -431,7 +432,7 @@ def main():
     print("Resolving IPN...")
     reference = fetch_kicad_reference(category["pk"])
     if reference:
-        ipn = next_ipn(reference, category["pk"])
+        ipn = next_ipn(reference)
         print(f"  Next IPN: {ipn}")
     else:
         ipn = None

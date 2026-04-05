@@ -25,12 +25,12 @@ selection_lists:
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
 
-  - name: FuseCase
-    description: Fuse case
+  - name: FuseCases
+    description: Fuse cases
     entries: [5x20mm]
 
-  - name: FuseType
-    description: Fuse type
+  - name: FuseTypes
+    description: Fuse types
     entries: [Slow blow, Fast blow]
 
   - name: LED_Colours
@@ -182,6 +182,14 @@ parameter_templates:
   - name: Dielectric
     description: Capacitor dielectric type
     selectionlist: CapacitorDielectrics
+
+  - name: FuseCase
+    description: Fuse case
+    selectionlist: FuseCases
+
+  - name: FuseType
+    description: Fuse type
+    selectionlist: FuseTypes
 
   - name: LED_Colour
     description: LED colour(s)

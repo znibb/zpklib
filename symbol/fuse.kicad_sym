@@ -11,13 +11,13 @@
 		)
 		(exclude_from_sim no)
 		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
+		(on_board no)
+		(in_pos_files no)
 		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "F"
 			(at 0 2.032 0)
 			(show_name no)
-			(do_not_autoplace no)
+			(do_not_autoplace yes)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -27,14 +27,14 @@
 		(property "Value" "FuseHeld"
 			(at 0 -1.905 0)
 			(show_name no)
-			(do_not_autoplace no)
+			(do_not_autoplace yes)
 			(effects
 				(font
 					(size 1.27 1.27)
 				)
 			)
 		)
-		(property "Footprint" "Footprint"
+		(property "Footprint" ""
 			(at 0 5.08 0)
 			(show_name no)
 			(do_not_autoplace no)

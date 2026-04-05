@@ -91,6 +91,10 @@ package_selection_lists:
     description: Power connectors
     pretty_dir: connector_power.pretty
 
+  - name: Packages_Diode
+    description: Diode packages
+    pretty_dir: diode.pretty
+
   - name: Packages_Inductor
     description: Inductor packages
     pretty_dir: inductor.pretty
@@ -139,6 +143,10 @@ parameter_templates:
     description: Current rating
     unit: A
 
+  - name: CurrentReverseLeakage
+    description: Reverse leakage current
+    unit: A
+
   - name: CurrentSaturation
     description: Saturation current
     unit: A
@@ -176,6 +184,10 @@ parameter_templates:
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
+
+  - name: Package_Diode
+    description: Diode package
+    selectionlist: Packages_Diode
 
   - name: Package_Inductor
     description: Inductor package
@@ -233,6 +245,10 @@ parameter_templates:
     description: Relay switching voltage (DC)
     unit: V
 
+  - name: ReverseRecoveryTime
+    description: Reverse recovery time
+    unit: s
+
   - name: SwitchFunction
     description: Switch function
     selectionlist: SwitchFunctions
@@ -286,8 +302,16 @@ parameter_templates:
   - name: ValueStandard # top-level
     description: Component value, decimal notation
 
+  - name: VoltageForward
+    description: Forward voltage
+    unit: V
+
   - name: VoltageRating
     description: Voltage rating
+    unit: V
+
+  - name: VoltageReverse
+    description: Max reverse voltage
     unit: V
 
 subcategories:
@@ -332,6 +356,21 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_ConnectorPower
+
+  - name: DiodeRectifier
+    description: Diode, rectifier
+    icon: ti:circuit-diode:outline
+    params:
+      - CurrentRating
+      - CurrentReverseLeakage
+      - Package_Diode
+      - ReverseRecoveryTime
+      - VoltageForward
+      - VoltageReverse
+    kicad:
+      default_symbol: diode:DiodeRectifier
+      default_reference: D
+      footprint_param: Package_Diode
 
   - name: Inductor
     description: Fixed value

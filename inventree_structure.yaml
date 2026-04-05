@@ -25,6 +25,10 @@ selection_lists:
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
 
+  - name: FET_Types
+    description: FET types
+    entries: [N-channel, P-channel]
+
   - name: FuseCases
     description: Fuse cases
     entries: [5x20mm]
@@ -92,6 +96,10 @@ symbol_selection_lists:
     description: Switch symbols
     symbol_file: switch.kicad_sym
 
+  - name: Symbols_Transistor
+    description: Transistor symbols
+    symbol_file: transistor.kicad_sym
+
 # Package selection lists are derived from footprint directories at runtime.
 # Each entry specifies the list name, description, and the footprint pretty directory.
 package_selection_lists:
@@ -147,6 +155,10 @@ package_selection_lists:
     description: Switch packages
     pretty_dir: switch.pretty
 
+  - name: Packages_Transistor
+    description: Transistor packages
+    pretty_dir: transistor.pretty
+
 # Parameter templates.
 # unit: omit or leave empty for dimensionless
 # checkbox: omit to default to false
@@ -182,6 +194,10 @@ parameter_templates:
   - name: Dielectric
     description: Capacitor dielectric type
     selectionlist: CapacitorDielectrics
+
+  - name: FET_Type
+    description: FET_Type
+    selectionlist: FET_Types
 
   - name: FuseCase
     description: Fuse case
@@ -263,6 +279,10 @@ parameter_templates:
     description: Switch package
     selectionlist: Packages_Switch
 
+  - name: Package_Transistor
+    description: Transistor package
+    selectionlist: Packages_Transistor
+
   - name: PowerDecimal
     description: Power rating, decimal
     unit: W
@@ -333,6 +353,10 @@ parameter_templates:
     description: Switch symbol
     selectionlist: Symbols_Switch
 
+  - name: Symbol_Transistor
+    description: Transistor symbol
+    selectionlist: Symbols_Transistor
+
   - name: SensorType
     description: Sensor type
     selectionlist: SensorTypes
@@ -359,8 +383,20 @@ parameter_templates:
   - name: ValueStandard # top-level
     description: Component value, decimal notation
 
+  - name: VoltageDrainSource
+    description: Drain to Source voltage
+    unit: V
+
   - name: VoltageForward
     description: Forward voltage
+    unit: V
+
+  - name: VoltageGateSource
+    description: Gate to Source (max)
+    unit: V
+
+  - name: VoltageGateSourceThreshold
+    description: Gate to Source threshold (max)
     unit: V
 
   - name: VoltageRating
@@ -570,3 +606,20 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: SW
       footprint_param: Package_Switch
+
+  - name: Transistor
+    description: Transistors
+    icon: 
+    params:
+      - CurrentRating
+      - FET_Type
+      - Package_Transistor
+      - Symbol
+      - Symbol_Transistor
+      - VoltageDrainSource
+      - VoltageGateSource
+      - VoltageGateSourceThreshold
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: Q
+      footprint_param: Package_Transistor

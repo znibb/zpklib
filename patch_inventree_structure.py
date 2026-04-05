@@ -208,6 +208,9 @@ def setup_parameter_templates(structure, selection_lists):
     print("Step 3: Syncing parameter templates...")
     existing = {t["name"]: t for t in as_list(api_get("parameter/template/?limit=9999"))}
     templates = {}
+    unchanged = 0
+    changes = []
+
     for tmpl in structure.get("parameter_templates", []):
         name = tmpl["name"]
         sl_key = tmpl.get("selectionlist")
@@ -227,14 +230,18 @@ def setup_parameter_templates(structure, selection_lists):
             }
             if desired != current:
                 api_patch(f"parameter/template/{pk}/", desired)
-                print(f"  '{name}': {w('updated', 'update')} pk={pk}")
+                changes.append(f"  '{name}': {w('updated', 'update')} pk={pk}")
             else:
-                print(f"  '{name}': no changes pk={pk}")
+                unchanged += 1
             templates[name] = pk
         else:
             result = api_post("parameter/template/", {"name": name, **desired})
             templates[name] = result["pk"]  # None in dry-run
-            print(f"  '{name}': {w('created', 'create')}" + (f" pk={result['pk']}" if result["pk"] else ""))
+            changes.append(f"  '{name}': {w('created', 'create')}" + (f" pk={result['pk']}" if result["pk"] else ""))
+
+    print(f"  {unchanged} unchanged" + (", changes:" if changes else ""))
+    for line in changes:
+        print(line)
     return templates
 
 

@@ -78,5 +78,32 @@ elif field_state_a in content:
 else:
     raise AssertionError("description field patch: unexpected serializer format")
 
+# ── Patch 3: hide reference field for categories whose reference starts with '#' ─
+#
+# KiCad convention: power/hidden references use '#' prefix (e.g. #PWR, #FLG).
+# The plugin hardcodes visible='True' for the reference field; this patch makes
+# it emit visible='False' when the category's default_reference starts with '#'.
+
+ref_state_a = (
+    "            'reference': {\n"
+    "                \"value\": self.get_reference(part),\n"
+    "                \"visible\": 'True',\n"
+    "            },\n"
+)
+ref_target = (
+    "            'reference': {\n"
+    "                \"value\": self.get_reference(part),\n"
+    "                \"visible\": 'False' if (kc := self.get_kicad_category(part)) and kc.default_reference.startswith('#') else 'True',\n"
+    "            },\n"
+)
+
+if ref_target in content:
+    print("reference visibility patch: already applied, skipping")
+elif ref_state_a in content:
+    content = content.replace(ref_state_a, ref_target, 1)
+    print("reference visibility patch: applied")
+else:
+    raise AssertionError("reference visibility patch: unexpected serializer format")
+
 with open(path, 'w') as f:
     f.write(content)

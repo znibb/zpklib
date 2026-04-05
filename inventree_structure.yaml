@@ -1,7 +1,3 @@
-# Name of the parameter template whose value is used as the KiCad symbol for each part.
-# Written to the KICAD_SYMBOL_PARAMETER plugin setting.
-kicad_symbol_parameter: Symbol
-
 top_category:
   name: kicad-parts
   description: Atomic parts for use in KiCad
@@ -319,6 +315,7 @@ subcategories:
     icon: ti:sun:outline
     params:
       - LED_Colour
+      - Package_LED
       - Symbol
       - Symbol_LED
       - TemperatureMax

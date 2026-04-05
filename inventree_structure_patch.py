@@ -13,7 +13,6 @@ Usage:
 import argparse
 import json
 import re
-import subprocess
 import sys
 from pathlib import Path
 
@@ -82,20 +81,6 @@ def api_delete(path, base=None):
     if not r.ok:
         print(f"  ERROR {r.status_code}: {r.text}", file=sys.stderr)
         r.raise_for_status()
-
-
-def sql(query):
-    if DRY_RUN:
-        return ""
-    result = subprocess.run(
-        ["docker", "exec", "inventree-db", "psql", "-U", "inventree", "-d", "inventree", "-c", query],
-        capture_output=True, text=True,
-    )
-    if result.returncode != 0:
-        print(f"  SQL ERROR: {result.stderr}", file=sys.stderr)
-        raise RuntimeError("SQL failed")
-    return result.stdout
-
 
 def as_list(data):
     return data if isinstance(data, list) else data.get("results", [])
@@ -373,31 +358,6 @@ def setup_kicad_mappings(structure, subcategory_pks, templates):
             print(f"  '{name}': {w('created', 'create')} kicad_category{pk_str}")
 
 
-# ---------------------------------------------------------------------------
-# Step 6: KiCad plugin settings
-# ---------------------------------------------------------------------------
-
-def setup_kicad_plugin_settings(structure, templates):
-    print("Step 6: Syncing KiCad plugin settings...")
-
-    # Set KICAD_SYMBOL_PARAMETER to the pk of the symbol parameter template
-    # specified in the structure file under kicad_symbol_parameter.
-    symbol_param_name = structure.get("kicad_symbol_parameter")
-    if symbol_param_name:
-        pk = templates.get(symbol_param_name)
-        if pk is not None:
-            sql(f"""
-INSERT INTO plugin_pluginsetting (key, value, plugin_id)
-SELECT 'KICAD_SYMBOL_PARAMETER', '{pk}', id
-FROM plugin_pluginconfig WHERE key = 'kicad-library-plugin'
-ON CONFLICT (plugin_id, key) DO UPDATE SET value = EXCLUDED.value;
-""")
-            print(f"  KICAD_SYMBOL_PARAMETER = {pk} ('{symbol_param_name}')" + (" [dry-run]" if DRY_RUN else ""))
-        else:
-            print(f"  Warning: template '{symbol_param_name}' not found, skipping KICAD_SYMBOL_PARAMETER")
-    else:
-        print("  No kicad_symbol_parameter defined in structure file, skipping")
-
 
 # ---------------------------------------------------------------------------
 # Main
@@ -431,7 +391,6 @@ def main():
     templates = setup_parameter_templates(structure, selection_lists)
     subcategory_pks = setup_subcategories(structure, top_pk, templates)
     setup_kicad_mappings(structure, subcategory_pks, templates)
-    setup_kicad_plugin_settings(structure, templates)
     print("\nDone.")
 
 

@@ -407,6 +407,7 @@ parameter_templates:
     description: Max reverse voltage
     unit: V
 
+# subcategories
 subcategories:
   - name: Capacitor
     description: Ceramic, fixed value
@@ -421,6 +422,7 @@ subcategories:
       default_symbol: capacitor:Capacitor
       default_reference: C
       footprint_param: Package_Capacitor
+      show_extra_fields: Case, VoltageRating
 
   - name: CapacitorPolarized
     description: Polarized, fixed value

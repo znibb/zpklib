@@ -303,12 +303,8 @@ parameter_templates:
     description: Transistor package
     selectionlist: Packages_Transistor
 
-  - name: PowerDecimal
-    description: Power rating, decimal
-    unit: W
-
-  - name: PowerFractional
-    description: Power rating, fractional
+  - name: Power
+    description: Power rating
     unit: W
 
   - name: PowerSymbolNetName
@@ -559,8 +555,7 @@ subcategories:
     params:
       - CurrentOutput
       - Package_PowerModule
-      - PowerDecimal
-      - PowerFractional
+      - Power
       - Symbol
       - Symbol_PowerModule
       - VoltageOutput
@@ -568,7 +563,7 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_PowerModule
-      show_extra_fields: PowerDecimal
+      show_extra_fields: Power
 
   - name: PowerSymbol
     description: Power symbols
@@ -606,8 +601,7 @@ subcategories:
     params:
       - Case
       - Package_Resistor
-      - PowerDecimal
-      - PowerFractional
+      - Power
       - Tolerance
     kicad:
       default_symbol: resistor:Resistor
@@ -620,8 +614,7 @@ subcategories:
     icon: ti:circuit-resistor:outline
     params:
       - Package_ResistorVariable
-      - PowerDecimal
-      - PowerFractional
+      - Power
       - Tolerance
     kicad:
       default_symbol: resistor:ResistorVariable

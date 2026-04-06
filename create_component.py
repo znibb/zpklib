@@ -246,25 +246,6 @@ def next_ipn(reference):
 _SI_PREFIXES = set('TGMkmuμnpf')
 
 
-def parse_power(raw):
-    """
-    Parse a power rating input into (decimal_str, fractional_str).
-    Fractional input '1/8' → decimal='0.125', fractional='1/8'.
-    Decimal input '0.25' → decimal='0.25', fractional=''.
-    Empty input → ('', '').
-    """
-    raw = raw.strip()
-    if not raw:
-        return '', ''
-    if '/' in raw:
-        try:
-            num_s, den_s = raw.split('/', 1)
-            decimal = float(num_s) / float(den_s)
-            return str(round(decimal, 3)), raw
-        except (ValueError, ZeroDivisionError):
-            return raw, ''
-    return raw, ''
-
 
 def to_compact(value_str, is_resistor=False):
     """
@@ -484,8 +465,7 @@ def main():
         name = net_name
         manufacturer = description = datasheet_url = ""
         is_resistor = False
-        value_std = value_alt = power_dec = power_frac = ""
-        power_dec_pk = power_frac_pk = None
+        value_std = value_alt = ""
 
         # ------------------------------------------------------------------
         # Step 5: Collect parameter values (power symbol)
@@ -508,8 +488,7 @@ def main():
         mpn_tmpl_pk    = next((t["pk"] for t in templates if t["name"] == "MPN"), None)
         value_std_pk   = next((t["pk"] for t in templates if t["name"] == "ValueStandard"), None)
         value_alt_pk   = next((t["pk"] for t in templates if t["name"] == "ValueAlternate"), None)
-        power_dec_pk   = next((t["pk"] for t in templates if t["name"] == "PowerDecimal"), None)
-        power_frac_pk  = next((t["pk"] for t in templates if t["name"] == "PowerFractional"), None)
+        power_pk       = next((t["pk"] for t in templates if t["name"] == "Power"), None)
         case_pk        = next((t["pk"] for t in templates if t["name"] == "Case"), None)
 
         # Determine which package template drives the auto-Case derivation
@@ -526,7 +505,7 @@ def main():
         pre_filled_pks = {
             pk for pk in (
                 mpn_tmpl_pk, value_std_pk, value_alt_pk,
-                power_dec_pk, power_frac_pk,
+                power_pk,
                 *(( package_for_case_pk, case_pk) if auto_case else ()),
             )
             if pk is not None
@@ -573,10 +552,18 @@ def main():
                 value_std = component_value
                 value_alt = component_value
 
-        power_dec, power_frac = '', ''
-        if is_resistor and (power_dec_pk is not None or power_frac_pk is not None):
-            raw_power = input("Power rating (decimal or fraction, e.g. 0.25 or 1/8): ").strip()
-            power_dec, power_frac = parse_power(raw_power)
+        power_val = ''
+        if power_pk is not None:
+            raw_power = input("Power [W] (decimal or fraction, e.g. 0.25 or 1/8, blank to skip): ").strip()
+            if raw_power and '/' in raw_power:
+                try:
+                    num_s, den_s = raw_power.split('/', 1)
+                    decimal = float(num_s) / float(den_s)
+                    power_val = f"{decimal:.2f}".rstrip('0').rstrip('.')
+                except (ValueError, ZeroDivisionError):
+                    power_val = raw_power
+            else:
+                power_val = raw_power
 
         # ------------------------------------------------------------------
         # Step 5: Collect parameter values
@@ -594,10 +581,8 @@ def main():
             param_values[value_std_pk] = value_std
         if value_alt_pk is not None:
             param_values[value_alt_pk] = value_alt
-        if power_dec_pk is not None:
-            param_values[power_dec_pk] = power_dec
-        if power_frac_pk is not None:
-            param_values[power_frac_pk] = power_frac
+        if power_pk is not None:
+            param_values[power_pk] = power_val
 
         if auto_case:
             pkg_tmpl = next(t for t in templates if t["pk"] == package_for_case_pk)
@@ -643,11 +628,8 @@ def main():
         if datasheet_url:
             print(f"  Datasheet:   {datasheet_url}")
         print(f"  Value:       {value_std or '(empty)'}" + (f"  →  {value_alt}" if value_alt else ""))
-        if is_resistor and (power_dec_pk is not None or power_frac_pk is not None):
-            power_summary = power_dec or '(empty)'
-            if power_frac:
-                power_summary += f"  ({power_frac})"
-            print(f"  Power:       {power_summary}")
+        if power_pk is not None:
+            print(f"  Power:       {power_val or '(empty)'}")
     print(f"  Category:    {category['name']} (pk={category['pk']})")
     if param_values:
         print("  Parameters:")

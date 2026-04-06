@@ -669,7 +669,7 @@ def main():
         "description": description,
         "category": category["pk"],
         "active": True,
-        "copy_category_parameters": False,  # we set parameters explicitly below
+        "copy_category_parameters": True,
     }
     if ipn:
         part_data["IPN"] = ipn
@@ -680,17 +680,33 @@ def main():
     # ------------------------------------------------------------------
     # Step 8: Set parameter values
     # ------------------------------------------------------------------
+    # copy_category_parameters may have pre-created some parameters; look them
+    # up so we can PATCH instead of POST to avoid unique-constraint errors.
+    existing_params = as_list(api_get(f"parameter/?model_type=part&model_id={part_pk}&limit=9999"))
+    existing_pk_by_template = {p["template"]: p["pk"] for p in existing_params}
+
     for tmpl in templates:
         val = param_values.get(tmpl["pk"], "")
         if not val:
             print(f"  Skipped {tmpl['name']} (empty)")
             continue
-        api_post("parameter/", {
-            "model_type": "part",
-            "model_id": part_pk,
-            "template": tmpl["pk"],
-            "data": val,
-        })
+        existing_pk = existing_pk_by_template.get(tmpl["pk"])
+        if existing_pk:
+            r = requests.patch(
+                f"{BASE_URL}/parameter/{existing_pk}/",
+                headers=HEADERS,
+                json={"data": val},
+            )
+            if not r.ok:
+                print(f"ERROR {r.status_code}: {r.text}", file=sys.stderr)
+                r.raise_for_status()
+        else:
+            api_post("parameter/", {
+                "model_type": "part",
+                "model_id": part_pk,
+                "template": tmpl["pk"],
+                "data": val,
+            })
         print(f"  Set {tmpl['name']} = {val}")
 
     # ------------------------------------------------------------------

@@ -548,6 +548,21 @@ subcategories:
       default_reference: D
       footprint_param: Package_Diode
 
+  - name: DiodeSchottky
+    description: Diode, schottky
+    icon: ti:circuit-diode:outline
+    params:
+      - CurrentRating
+      - CurrentReverseLeakage
+      - Package_Diode
+      - ReverseRecoveryTime
+      - VoltageForward
+      - VoltageReverse
+    kicad:
+      default_symbol: diode:DiodeSchottky
+      default_reference: D
+      footprint_param: Package_Diode
+
   - name: Fuse
     description: Fuse
     icon: ti:shield:outline

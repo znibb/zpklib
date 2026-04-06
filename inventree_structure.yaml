@@ -69,6 +69,10 @@ selection_lists:
     description: Switch functions
     entries: [Off-Mom, Off-Mom-Mom, On-Mom, On-Mom_Off-Mom, On-On]
 
+  - name: SwitchingRegulatorFunctions
+    description: Switching regulator functions
+    entries: [Step-up, Step-down]
+
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).
 symbol_selection_lists:
@@ -91,6 +95,10 @@ symbol_selection_lists:
   - name: Symbols_PowerModule
     description: Power module symbols
     symbol_file: power_module.kicad_sym
+
+  - name: Symbols_RegulatorSwitching
+    description: Switching regulator symbols
+    symbol_file: regulator_switching.kicad_sym
 
   - name: Symbols_Relay
     description: Relay symbols
@@ -150,6 +158,10 @@ package_selection_lists:
   - name: Packages_PowerModule
     description: Power module packages
     pretty_dir: power_module.pretty
+
+  - name: Packages_RegulatorSwitching
+    description: Switching regulator packages
+    pretty_dir: package_SO.pretty
 
   - name: Packages_Relay
     description: Relay packages
@@ -298,6 +310,10 @@ parameter_templates:
     description: Power module package
     selectionlist: Packages_PowerModule
 
+  - name: Package_RegulatorSwitching
+    description: Switching regulator package
+    selectionlist: Packages_RegulatorSwitching
+
   - name: Package_Relay
     description: Relay package
     selectionlist: Packages_Relay
@@ -354,6 +370,10 @@ parameter_templates:
     description: Switch function
     selectionlist: SwitchFunctions
 
+  - name: SwitchingRegulatorFunction
+    description: Switching regulator function
+    selectionlist: SwitchingRegulatorFunctions
+
   - name: Symbol
     description: KiCad symbol
 
@@ -376,6 +396,10 @@ parameter_templates:
   - name: Symbol_PowerModule
     description: Power module symbol
     selectionlist: Symbols_PowerModule
+
+  - name: Symbol_RegulatorSwitching
+    description: Switching regulator symbol
+    selectionlist: Symbols_RegulatorSwitching
 
   - name: Symbol_Relay
     description: Relay symbol
@@ -601,6 +625,21 @@ subcategories:
       default_reference: U
       footprint_param: Package_PowerModule
       show_extra_fields: Power
+
+  - name: RegulatorSwitching
+    description: Switching regulators
+    icon: ti:cpu:outline
+    params:
+      - Channels
+      - CurrentOutput
+      - Package_RegulatorSwitching
+      - SwitchingRegulatorFunction
+      - Symbol
+      - Symbol_RegulatorSwitching
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_SO
 
   - name: Relay
     description: Relays

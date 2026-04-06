@@ -454,133 +454,133 @@ def main():
     print(f"\n--- New part in '{category['name']}' ---")
 
     mpn_tmpl_pk    = next((t["pk"] for t in templates if t["name"] == "MPN"), None)
-        value_std_pk   = next((t["pk"] for t in templates if t["name"] == "ValueStandard"), None)
-        value_alt_pk   = next((t["pk"] for t in templates if t["name"] == "ValueAlternate"), None)
-        power_pk       = next((t["pk"] for t in templates if t["name"] == "Power"), None)
-        case_pk        = next((t["pk"] for t in templates if t["name"] == "Case"), None)
+    value_std_pk   = next((t["pk"] for t in templates if t["name"] == "ValueStandard"), None)
+    value_alt_pk   = next((t["pk"] for t in templates if t["name"] == "ValueAlternate"), None)
+    power_pk       = next((t["pk"] for t in templates if t["name"] == "Power"), None)
+    case_pk        = next((t["pk"] for t in templates if t["name"] == "Case"), None)
 
-        # Determine which package template drives the auto-Case derivation
-        if reference == "C":
-            package_for_case_pk = next((t["pk"] for t in templates if t["name"] == "Package_Capacitor"), None)
-        elif reference == "R":
-            package_for_case_pk = next((t["pk"] for t in templates if t["name"] == "Package_Resistor"), None)
+    # Determine which package template drives the auto-Case derivation
+    if reference == "C":
+        package_for_case_pk = next((t["pk"] for t in templates if t["name"] == "Package_Capacitor"), None)
+    elif reference == "R":
+        package_for_case_pk = next((t["pk"] for t in templates if t["name"] == "Package_Resistor"), None)
+    else:
+        package_for_case_pk = None
+
+    # If both Package and Case exist for this category, handle them together
+    auto_case = package_for_case_pk is not None and case_pk is not None
+
+    pre_filled_pks = {
+        pk for pk in (
+            mpn_tmpl_pk, value_std_pk, value_alt_pk,
+            power_pk,
+            *(( package_for_case_pk, case_pk) if auto_case else ()),
+        )
+        if pk is not None
+    }
+
+    manufacturer_pk = next((t["pk"] for t in templates if t["name"] == "Manufacturer"), None)
+    if manufacturer_pk is not None:
+        pre_filled_pks.add(manufacturer_pk)
+
+    if symbol_pk is not None:
+        pre_filled_pks.add(symbol_pk)
+    if symbol_specific_pk is not None:
+        pre_filled_pks.add(symbol_specific_pk)
+    if hide_fields_pk is not None:
+        pre_filled_pks.add(hide_fields_pk)
+    if extra_fields_pk is not None:
+        pre_filled_pks.add(extra_fields_pk)
+
+    mpn = input("MPN (required): ").strip().replace("/", "-")
+    if not mpn:
+        print("MPN is required.", file=sys.stderr)
+        sys.exit(1)
+    name = mpn
+    manufacturer = input("Manufacturer (required): ").strip()
+    if not manufacturer:
+        print("Manufacturer is required.", file=sys.stderr)
+        sys.exit(1)
+    description = input("Description: ").strip()
+    datasheet_url = input("Datasheet URL (blank to skip): ").strip()
+
+    is_resistor = reference in ("R", "RV") if reference else False
+    component_value = input(f"Value (blank to use MPN '{mpn}'): ").strip() or mpn
+    if '.' in component_value:
+        # Standard format entered — derive alternate (fall back to identical copy)
+        value_std = component_value
+        value_alt = to_compact(component_value, is_resistor) or component_value
+    else:
+        # Try to parse as compact/alternate format — derive standard
+        value_std = from_compact(component_value, is_resistor)
+        if value_std:
+            value_alt = component_value
         else:
-            package_for_case_pk = None
-
-        # If both Package and Case exist for this category, handle them together
-        auto_case = package_for_case_pk is not None and case_pk is not None
-
-        pre_filled_pks = {
-            pk for pk in (
-                mpn_tmpl_pk, value_std_pk, value_alt_pk,
-                power_pk,
-                *(( package_for_case_pk, case_pk) if auto_case else ()),
-            )
-            if pk is not None
-        }
-
-        manufacturer_pk = next((t["pk"] for t in templates if t["name"] == "Manufacturer"), None)
-        if manufacturer_pk is not None:
-            pre_filled_pks.add(manufacturer_pk)
-
-        if symbol_pk is not None:
-            pre_filled_pks.add(symbol_pk)
-        if symbol_specific_pk is not None:
-            pre_filled_pks.add(symbol_specific_pk)
-        if hide_fields_pk is not None:
-            pre_filled_pks.add(hide_fields_pk)
-        if extra_fields_pk is not None:
-            pre_filled_pks.add(extra_fields_pk)
-
-        mpn = input("MPN (required): ").strip().replace("/", "-")
-        if not mpn:
-            print("MPN is required.", file=sys.stderr)
-            sys.exit(1)
-        name = mpn
-        manufacturer = input("Manufacturer (required): ").strip()
-        if not manufacturer:
-            print("Manufacturer is required.", file=sys.stderr)
-            sys.exit(1)
-        description = input("Description: ").strip()
-        datasheet_url = input("Datasheet URL (blank to skip): ").strip()
-
-        is_resistor = reference in ("R", "RV") if reference else False
-        component_value = input(f"Value (blank to use MPN '{mpn}'): ").strip() or mpn
-        if '.' in component_value:
-            # Standard format entered — derive alternate (fall back to identical copy)
+            # No decimal, no embedded separator — same for both
             value_std = component_value
-            value_alt = to_compact(component_value, is_resistor) or component_value
-        else:
-            # Try to parse as compact/alternate format — derive standard
-            value_std = from_compact(component_value, is_resistor)
-            if value_std:
-                value_alt = component_value
-            else:
-                # No decimal, no embedded separator — same for both
-                value_std = component_value
-                value_alt = component_value
+            value_alt = component_value
 
-        power_val = ''
-        if power_pk is not None:
-            raw_power = input("Power [W] (decimal or fraction, e.g. 0.25 or 1/8, blank to skip): ").strip()
-            if raw_power and '/' in raw_power:
-                try:
-                    num_s, den_s = raw_power.split('/', 1)
-                    decimal = float(num_s) / float(den_s)
-                    power_val = f"{decimal:.2f}".rstrip('0').rstrip('.')
-                except (ValueError, ZeroDivisionError):
-                    power_val = raw_power
-            else:
+    power_val = ''
+    if power_pk is not None:
+        raw_power = input("Power [W] (decimal or fraction, e.g. 0.25 or 1/8, blank to skip): ").strip()
+        if raw_power and '/' in raw_power:
+            try:
+                num_s, den_s = raw_power.split('/', 1)
+                decimal = float(num_s) / float(den_s)
+                power_val = f"{decimal:.2f}".rstrip('0').rstrip('.')
+            except (ValueError, ZeroDivisionError):
                 power_val = raw_power
+        else:
+            power_val = raw_power
 
-        # ------------------------------------------------------------------
-        # Step 5: Collect parameter values
-        # ------------------------------------------------------------------
-        param_values = {}
-        if hide_fields_pk is not None and hide_fields_val:
-            param_values[hide_fields_pk] = hide_fields_val
-        if extra_fields_pk is not None and extra_fields_val:
-            param_values[extra_fields_pk] = extra_fields_val
-        if mpn_tmpl_pk is not None:
-            param_values[mpn_tmpl_pk] = mpn
-        if manufacturer_pk is not None:
-            param_values[manufacturer_pk] = manufacturer
-        if value_std_pk is not None:
-            param_values[value_std_pk] = value_std
-        if value_alt_pk is not None:
-            param_values[value_alt_pk] = value_alt
-        if power_pk is not None:
-            param_values[power_pk] = power_val
+    # ------------------------------------------------------------------
+    # Step 5: Collect parameter values
+    # ------------------------------------------------------------------
+    param_values = {}
+    if hide_fields_pk is not None and hide_fields_val:
+        param_values[hide_fields_pk] = hide_fields_val
+    if extra_fields_pk is not None and extra_fields_val:
+        param_values[extra_fields_pk] = extra_fields_val
+    if mpn_tmpl_pk is not None:
+        param_values[mpn_tmpl_pk] = mpn
+    if manufacturer_pk is not None:
+        param_values[manufacturer_pk] = manufacturer
+    if value_std_pk is not None:
+        param_values[value_std_pk] = value_std
+    if value_alt_pk is not None:
+        param_values[value_alt_pk] = value_alt
+    if power_pk is not None:
+        param_values[power_pk] = power_val
 
-        if auto_case:
-            pkg_tmpl = next(t for t in templates if t["pk"] == package_for_case_pk)
-            package_val = prompt_parameter(pkg_tmpl, entries_by_list)
-            param_values[package_for_case_pk] = package_val
-            footprint_name = package_val.split(':', 1)[-1]
-            m = re.match(r'^[A-Za-z]+_(\d{4})_\d{4}Metric$', footprint_name)
-            if m:
-                param_values[case_pk] = m.group(1)
-                print(f"  Case auto-set to: {m.group(1)}")
+    if auto_case:
+        pkg_tmpl = next(t for t in templates if t["pk"] == package_for_case_pk)
+        package_val = prompt_parameter(pkg_tmpl, entries_by_list)
+        param_values[package_for_case_pk] = package_val
+        footprint_name = package_val.split(':', 1)[-1]
+        m = re.match(r'^[A-Za-z]+_(\d{4})_\d{4}Metric$', footprint_name)
+        if m:
+            param_values[case_pk] = m.group(1)
+            print(f"  Case auto-set to: {m.group(1)}")
 
-        if symbol_specific_pk is not None:
-            sym_tmpl = next(t for t in templates if t["pk"] == symbol_specific_pk)
-            symbol_val = prompt_parameter(sym_tmpl, entries_by_list)
-            param_values[symbol_specific_pk] = symbol_val
-            if symbol_pk is not None:
-                param_values[symbol_pk] = symbol_val  # feed generic Symbol used by KiCad plugin
-            # Symbols ending in "Held" (e.g. FuseHeld) represent a part with no
-            # physical footprint — skip all Package_* prompts.
-            sym_name = symbol_val.split(":")[-1] if ":" in symbol_val else symbol_val
-            if sym_name.endswith("Held"):
-                for t in templates:
-                    if t["name"].startswith("Package_"):
-                        pre_filled_pks.add(t["pk"])
+    if symbol_specific_pk is not None:
+        sym_tmpl = next(t for t in templates if t["pk"] == symbol_specific_pk)
+        symbol_val = prompt_parameter(sym_tmpl, entries_by_list)
+        param_values[symbol_specific_pk] = symbol_val
+        if symbol_pk is not None:
+            param_values[symbol_pk] = symbol_val  # feed generic Symbol used by KiCad plugin
+        # Symbols ending in "Held" (e.g. FuseHeld) represent a part with no
+        # physical footprint — skip all Package_* prompts.
+        sym_name = symbol_val.split(":")[-1] if ":" in symbol_val else symbol_val
+        if sym_name.endswith("Held"):
+            for t in templates:
+                if t["name"].startswith("Package_"):
+                    pre_filled_pks.add(t["pk"])
 
-        remaining = [t for t in templates if t["pk"] not in pre_filled_pks]
-        if remaining:
-            print("\nParameter values:")
-            for tmpl in remaining:
-                param_values[tmpl["pk"]] = prompt_parameter(tmpl, entries_by_list)
+    remaining = [t for t in templates if t["pk"] not in pre_filled_pks]
+    if remaining:
+        print("\nParameter values:")
+        for tmpl in remaining:
+            param_values[tmpl["pk"]] = prompt_parameter(tmpl, entries_by_list)
 
     # ------------------------------------------------------------------
     # Step 6: Confirm

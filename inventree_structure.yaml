@@ -37,6 +37,10 @@ selection_lists:
     description: Fuse types
     entries: [Slow blow, Fast blow]
 
+  - name: InputTypes
+    description: Input types
+    entries: [DC, "AC, DC"]
+
   - name: LED_Colours
     description: LED colour(s)
     entries: [Red/Yellow/Green]
@@ -79,6 +83,10 @@ symbol_selection_lists:
   - name: Symbols_LED
     description: LED symbols
     symbol_file: led.kicad_sym
+
+  - name: Symbols_Isolator
+    description: Isolator symbols
+    symbol_file: isolator.kicad_sym
 
   - name: Symbols_Power
     description: Power symbols
@@ -135,6 +143,10 @@ package_selection_lists:
     description: Inductor packages
     pretty_dir: inductor.pretty
 
+  - name: Packages_Isolator
+    description: Isolator packages
+    pretty_dir: package_DIP.pretty
+
   - name: Packages_LED
     description: LED packages
     pretty_dir: led.pretty
@@ -179,6 +191,9 @@ parameter_templates:
   - name: Case
     description: Standard package label
 
+  - name: Channels
+    description: Number of channels
+
   - name: ConnectorGender
     description: Connector gender
     selectionlist: ConnectorGenders
@@ -222,6 +237,10 @@ parameter_templates:
   - name: FuseType
     description: Fuse type
     selectionlist: FuseTypes
+
+  - name: InputType
+    description: Input type
+    selectionlist: InputTypes
 
   - name: KicadExtraFields
     description: Additional KiCad fields to show (comma-separated InvenTree parameter names)
@@ -270,6 +289,10 @@ parameter_templates:
   - name: Package_Inductor
     description: Inductor package
     selectionlist: Packages_Inductor
+
+  - name: Package_Isolator
+    description: Isolator package
+    selectionlist: Packages_Isolator
 
   - name: Package_LED
     description: LED package
@@ -353,6 +376,10 @@ parameter_templates:
     description: LED symbol
     selectionlist: Symbols_LED
 
+  - name: Symbol_Isolator
+    description: Isolator symbol
+    selectionlist: Symbols_Isolator
+
   - name: Symbol_Power
     description: Power symbol
     selectionlist: Symbols_Power
@@ -417,6 +444,10 @@ parameter_templates:
 
   - name: VoltageGateSourceThreshold
     description: Gate to Source threshold (max)
+    unit: V
+
+  - name: VoltageIsolation
+    description: Voltage isolation
     unit: V
 
   - name: VoltageOutput
@@ -535,6 +566,23 @@ subcategories:
       default_symbol: inductor:Inductor
       default_reference: L
       footprint_param: Package_Inductor
+
+  - name: Isolator
+    description: Isolator, optocoupler
+    icon: ti:cpu:outline
+    params:
+      - Channels
+      - CurrentOutput
+      - InputType
+      - Symbol
+      - Symbol_Isolator
+      - Package_Isolator
+      - VoltageIsolation
+      - VoltageOutput
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_Isolator
 
   - name: LED
     description: Light-Emitting Diodes

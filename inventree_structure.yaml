@@ -88,10 +88,6 @@ symbol_selection_lists:
     description: Isolator symbols
     symbol_file: isolator.kicad_sym
 
-  - name: Symbols_Power
-    description: Power symbols
-    symbol_file: power_symbol.kicad_sym
-
   - name: Symbols_PowerModule
     description: Power module symbols
     symbol_file: power_module.kicad_sym
@@ -330,9 +326,6 @@ parameter_templates:
     description: Power rating
     unit: W
 
-  - name: PowerSymbolNetName
-    description: Net name
-
   - name: RelayCoilType
     description: Relay coil type
     selectionlist: RelayCoilTypes
@@ -379,10 +372,6 @@ parameter_templates:
   - name: Symbol_Isolator
     description: Isolator symbol
     selectionlist: Symbols_Isolator
-
-  - name: Symbol_Power
-    description: Power symbol
-    selectionlist: Symbols_Power
 
   - name: Symbol_PowerModule
     description: Power module symbol
@@ -612,18 +601,6 @@ subcategories:
       default_reference: U
       footprint_param: Package_PowerModule
       show_extra_fields: Power
-
-  - name: PowerSymbol
-    description: Power symbols
-    icon: ti:circuit-ground:outline
-    params:
-      - PowerSymbolNetName
-      - Symbol
-      - Symbol_Power
-    kicad:
-      default_symbol: placeholder:BlankSymbol
-      default_reference: "#PWR"
-      value_param: PowerSymbolNetName
 
   - name: Relay
     description: Relays

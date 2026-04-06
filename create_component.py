@@ -446,46 +446,14 @@ def main():
     # ------------------------------------------------------------------
     # Step 4: Collect part info
     # ------------------------------------------------------------------
-    is_power_symbol = (reference == "#PWR")
-
     # Generic symbol pk — used by KiCad plugin; written alongside the category-specific Symbol_* param.
     symbol_pk = next((t["pk"] for t in templates if t["name"] == "Symbol"), None)
-    # Category-specific symbol selector (e.g. Symbol_ConnectorPower, Symbol_Power).
+    # Category-specific symbol selector (e.g. Symbol_ConnectorPower, Symbol_PowerModule).
     symbol_specific_pk = next((t["pk"] for t in templates if t["name"].startswith("Symbol_")), None)
 
     print(f"\n--- New part in '{category['name']}' ---")
 
-    if is_power_symbol:
-        net_name_pk = next((t["pk"] for t in templates if t["name"] == "PowerSymbolNetName"), None)
-
-        net_name = input("Net name (e.g. VCC, GND, +3V3): ").strip()
-        if not net_name:
-            print("Net name is required.", file=sys.stderr)
-            sys.exit(1)
-        name = net_name
-        manufacturer = description = datasheet_url = ""
-        is_resistor = False
-        value_std = value_alt = ""
-
-        # ------------------------------------------------------------------
-        # Step 5: Collect parameter values (power symbol)
-        # ------------------------------------------------------------------
-        param_values = {}
-        if net_name_pk is not None:
-            param_values[net_name_pk] = net_name
-        if symbol_specific_pk is not None:
-            sym_tmpl = next(t for t in templates if t["pk"] == symbol_specific_pk)
-            symbol_val = prompt_parameter(sym_tmpl, entries_by_list)
-            param_values[symbol_specific_pk] = symbol_val
-            if symbol_pk is not None:
-                param_values[symbol_pk] = symbol_val
-        if hide_fields_pk is not None and hide_fields_val:
-            param_values[hide_fields_pk] = hide_fields_val
-        if extra_fields_pk is not None and extra_fields_val:
-            param_values[extra_fields_pk] = extra_fields_val
-
-    else:
-        mpn_tmpl_pk    = next((t["pk"] for t in templates if t["name"] == "MPN"), None)
+    mpn_tmpl_pk    = next((t["pk"] for t in templates if t["name"] == "MPN"), None)
         value_std_pk   = next((t["pk"] for t in templates if t["name"] == "ValueStandard"), None)
         value_alt_pk   = next((t["pk"] for t in templates if t["name"] == "ValueAlternate"), None)
         power_pk       = next((t["pk"] for t in templates if t["name"] == "Power"), None)
@@ -619,17 +587,14 @@ def main():
     # ------------------------------------------------------------------
     print("\n--- Summary ---")
     print(f"  IPN:         {ipn or '(none)'}")
-    if is_power_symbol:
-        print(f"  Net name:    {name}")
-    else:
-        print(f"  MPN / Name:  {name}")
-        print(f"  Manufacturer:{manufacturer}")
-        print(f"  Description: {description}")
-        if datasheet_url:
-            print(f"  Datasheet:   {datasheet_url}")
-        print(f"  Value:       {value_std or '(empty)'}" + (f"  →  {value_alt}" if value_alt else ""))
-        if power_pk is not None:
-            print(f"  Power:       {power_val or '(empty)'}")
+    print(f"  MPN / Name:  {name}")
+    print(f"  Manufacturer:{manufacturer}")
+    print(f"  Description: {description}")
+    if datasheet_url:
+        print(f"  Datasheet:   {datasheet_url}")
+    print(f"  Value:       {value_std or '(empty)'}" + (f"  →  {value_alt}" if value_alt else ""))
+    if power_pk is not None:
+        print(f"  Power:       {power_val or '(empty)'}")
     print(f"  Category:    {category['name']} (pk={category['pk']})")
     if param_values:
         print("  Parameters:")

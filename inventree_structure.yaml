@@ -84,6 +84,10 @@ symbol_selection_lists:
     description: Power symbols
     symbol_file: power_symbol.kicad_sym
 
+  - name: Symbols_PowerModule
+    description: Power module symbols
+    symbol_file: power_module.kicad_sym
+
   - name: Symbols_Relay
     description: Relay symbols
     symbol_file: relay.kicad_sym
@@ -135,6 +139,10 @@ package_selection_lists:
     description: LED packages
     pretty_dir: led.pretty
 
+  - name: Packages_PowerModule
+    description: Power module packages
+    pretty_dir: power_module.pretty
+
   - name: Packages_Relay
     description: Relay packages
     pretty_dir: relay.pretty
@@ -175,6 +183,10 @@ parameter_templates:
     description: Connector gender
     selectionlist: ConnectorGenders
 
+  - name: CurrentOutput
+    description: Current output (max)
+    unit: A
+
   - name: CurrentRating
     description: Current rating
     unit: A
@@ -194,6 +206,10 @@ parameter_templates:
   - name: Dielectric
     description: Capacitor dielectric type
     selectionlist: CapacitorDielectrics
+
+  - name: Efficiency
+    description: Efficiency
+    unit: "%"
 
   - name: FET_Type
     description: FET_Type
@@ -258,6 +274,10 @@ parameter_templates:
   - name: Package_LED
     description: LED package
     selectionlist: Packages_LED
+
+  - name: Package_PowerModule
+    description: Power module package
+    selectionlist: Packages_PowerModule
 
   - name: Package_Relay
     description: Relay package
@@ -341,6 +361,10 @@ parameter_templates:
     description: Power symbol
     selectionlist: Symbols_Power
 
+  - name: Symbol_PowerModule
+    description: Power module symbol
+    selectionlist: Symbols_PowerModule
+
   - name: Symbol_Relay
     description: Relay symbol
     selectionlist: Symbols_Relay
@@ -397,6 +421,10 @@ parameter_templates:
 
   - name: VoltageGateSourceThreshold
     description: Gate to Source threshold (max)
+    unit: V
+
+  - name: VoltageOutput
+    description: Voltage output
     unit: V
 
   - name: VoltageRating
@@ -524,6 +552,23 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: D
       footprint_param: Package_LED
+
+  - name: PowerModule
+    description: Power modules
+    icon: ti:bolt:outline
+    params:
+      - CurrentOutput
+      - Package_PowerModule
+      - PowerDecimal
+      - PowerFractional
+      - Symbol
+      - Symbol_PowerModule
+      - VoltageOutput
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_PowerModule
+      show_extra_fields: PowerDecimal
 
   - name: PowerSymbol
     description: Power symbols

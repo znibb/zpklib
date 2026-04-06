@@ -21,6 +21,10 @@ selection_lists:
     description: Capacitor dialectric types
     entries: [X5R, X7R, C0G/NP0]
 
+  - name: CapacitorTypes
+    description: Capacitor types
+    entries: [Polymer, Hybrid]
+
   - name: ConnectorGenders
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
@@ -196,6 +200,10 @@ parameter_templates:
     description: Actuator orientation
     selectionlist: ActuatorOrientations
 
+  - name: CapacitorType
+    description: Capacitor type
+    selectionlist: CapacitorTypes
+
   - name: Case
     description: Standard package label
 
@@ -233,6 +241,10 @@ parameter_templates:
   - name: Efficiency
     description: Efficiency
     unit: "%"
+
+  - name: EquivalentSeriesResistance
+    description: Equivalent series resistance (ESR)
+    unit: Ω
 
   - name: FET_Type
     description: FET_Type
@@ -496,7 +508,8 @@ subcategories:
     description: Polarized, fixed value
     icon: ti:circuit-capacitor-polarized:outline
     params:
-      - Dielectric
+      - CapacitorType
+      - EquivalentSeriesResistance
       - Package_CapacitorPolarized
       - Tolerance
       - VoltageRating

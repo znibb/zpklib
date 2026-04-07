@@ -237,24 +237,6 @@
 			)
 		)
 		(symbol "MOSFET_N-ch_1_1"
-			(pin passive line
-				(at 0 3.81 270)
-				(length 1.27)
-				(name "D"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-				(number "D"
-					(effects
-						(font
-							(size 1.27 1.27)
-						)
-					)
-				)
-			)
 			(pin input line
 				(at -5.08 0 0)
 				(length 2.794)
@@ -265,7 +247,7 @@
 						)
 					)
 				)
-				(number "G"
+				(number "1"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -283,7 +265,25 @@
 						)
 					)
 				)
-				(number "S"
+				(number "2"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+			(pin passive line
+				(at 0 3.81 270)
+				(length 1.27)
+				(name "D"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "3"
 					(effects
 						(font
 							(size 1.27 1.27)

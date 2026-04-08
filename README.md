@@ -16,6 +16,8 @@ your resistors will show up under a symbol library named `zpklib - kicad-parts/R
 1. Create a python venv and install the required packages: `./setup-venv.sh`
 1. Create the httplib file: `setup-inventree-httplib.sh`
 1. Check that the Inventree server is reachable: `./check_connection.py`
+1. Open the KiCad main window, go to `Preferences->Configure Paths...`
+1. Add an `Environment Variable` called `ZPKLIB_DIR` that points to your local library path
 1. Add the `zpklib.kicad_httplib` file to KiCad as a Symbol Library
 
 ### Bulk update Inventree

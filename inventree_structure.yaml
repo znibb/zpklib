@@ -80,6 +80,10 @@ selection_lists:
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).
 symbol_selection_lists:
+  - name: Symbols_Connector
+    description: Connector symbols
+    symbol_file: connector.kicad_sym
+
   - name: Symbols_ConnectorPower
     description: Power connector symbols
     symbol_file: connector_power.kicad_sym
@@ -130,6 +134,10 @@ package_selection_lists:
   - name: Packages_CapacitorPolarized
     description: Polarized capacitor packages
     pretty_dir: capacitor_polarized.pretty
+
+  - name: Packages_Connector
+    description: Connector packages
+    pretty_dir: connector.pretty
 
   - name: Packages_ConnectorPower
     description: Power connectors
@@ -290,6 +298,10 @@ parameter_templates:
     description: Polarized capacitor package
     selectionlist: Packages_CapacitorPolarized
   
+  - name: Package_Connector
+    description: Connector package
+    selectionlist: Packages_Connector
+
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
@@ -388,6 +400,10 @@ parameter_templates:
 
   - name: Symbol
     description: KiCad symbol
+
+  - name: Symbol_Connector
+    description: Connector symbol
+    selectionlist: Symbols_Connector
 
   - name: Symbol_ConnectorPower
     description: Power connector symbol
@@ -518,6 +534,18 @@ subcategories:
       default_reference: CP
       footprint_param: Package_CapacitorPolarized
   
+  - name: Connector
+    description: Connector, generic
+    icon: ti:plug:outline
+    params:
+      - Package_Connector
+      - Symbol
+      - Symbol_Connector
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: J
+      footprint_param: Package_Connector
+
   - name: ConnectorPower
     description: Power connectors
     icon: ti:plug:outline

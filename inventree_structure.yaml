@@ -100,6 +100,11 @@ package_selection_lists:
       - connector.pretty
       - connector_jst.pretty
 
+  - name: Packages_ConnectorFan
+    description: Fan connector packages
+    pretty_dirs:
+      - connector_fan.pretty
+
   - name: Packages_ConnectorPower
     description: Power connectors
     pretty_dirs:
@@ -191,6 +196,10 @@ symbol_selection_lists:
   - name: Symbols_Connector
     description: Connector symbols
     symbol_file: connector.kicad_sym
+
+  - name: Symbols_ConnectorFan
+    description: Fan connector symbols
+    symbol_file: connector_fan.kicad_sym
 
   - name: Symbols_ConnectorPower
     description: Power connector symbols
@@ -365,6 +374,10 @@ parameter_templates:
     description: Connector package
     selectionlist: Packages_Connector
 
+  - name: Package_ConnectorFan
+    description: Can connector package
+    selectionlist: Package_ConnectorFan
+
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
@@ -475,6 +488,10 @@ parameter_templates:
   - name: Symbol_Connector
     description: Connector symbol
     selectionlist: Symbols_Connector
+
+  - name: Symbol_ConnectorFan
+    description: Fan connector symbol
+    selectionlist: Symbols_ConnectorFan
 
   - name: Symbol_ConnectorPower
     description: Power connector symbol
@@ -625,6 +642,19 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_Connector
+
+  - name: ConnectorFan
+    description: Fan connector
+    icon: ti:car-fan:outline
+    params:
+      - NbrOfPositions
+      - Package_ConnectorFan
+      - Symbol
+      - Symbol_ConnectorFan
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: J
+      footprint_param: Package_ConnectorFan
 
   - name: ConnectorPower
     description: Power connectors

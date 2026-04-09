@@ -82,87 +82,107 @@ selection_lists:
     entries: [Step-up, Step-down]
 
 # Package selection lists are derived from footprint directories at runtime.
-# Each entry specifies the list name, description, and the footprint pretty directory.
+# Each entry specifies the list name, description, and one or more footprint pretty directories.
 package_selection_lists:
   - name: Packages_Capacitor
     description: Capacitor packages
-    pretty_dir: capacitor.pretty
+    pretty_dirs:
+      - capacitor.pretty
 
   - name: Packages_CapacitorPolarized
     description: Polarized capacitor packages
-    pretty_dir: capacitor_polarized.pretty
+    pretty_dirs:
+      - capacitor_polarized.pretty
 
   - name: Packages_Connector
     description: Connector packages
-    pretty_dir: connector.pretty
+    pretty_dirs:
+      - connector.pretty
 
   - name: Packages_ConnectorPower
     description: Power connectors
-    pretty_dir: connector_power.pretty
+    pretty_dirs:
+      - connector_power.pretty
 
   - name: Packages_Diode
     description: Diode packages
-    pretty_dir: diode.pretty
+    pretty_dirs:
+      - diode.pretty
 
   - name: Packages_Fuse
     description: Fuse packages
-    pretty_dir: fuse.pretty
+    pretty_dirs:
+      - fuse.pretty
 
   - name: Packages_FuseHolder
     description: Fuse holder packages
-    pretty_dir: fuse_holder.pretty
+    pretty_dirs:
+      - fuse_holder.pretty
 
   - name: Packages_Inductor
     description: Inductor packages
-    pretty_dir: inductor.pretty
+    pretty_dirs:
+      - inductor.pretty
 
   - name: Packages_InterfaceEthernet
     description: Ethernet packages
-    pretty_dir: package_QFP.pretty
+    pretty_dirs:
+      - package_QFP.pretty
 
   - name: Packages_Isolator
     description: Isolator packages
-    pretty_dir: package_DIP.pretty
+    pretty_dirs:
+      - package_DIP.pretty
 
   - name: Packages_LED
     description: LED packages
-    pretty_dir: led.pretty
+    pretty_dirs:
+      - led.pretty
 
   - name: Packages_Microcontroller
     description: Microcontroller packages
-    pretty_dir: package_QFP.pretty
+    pretty_dirs:
+      - package_QFP.pretty
 
   - name: Packages_PowerModule
     description: Power module packages
-    pretty_dir: power_module.pretty
+    pretty_dirs:
+      - power_module.pretty
 
   - name: Packages_RegulatorSwitching
     description: Switching regulator packages
-    pretty_dir: package_SO.pretty
+    pretty_dirs:
+      - package_SO.pretty
 
   - name: Packages_Relay
     description: Relay packages
-    pretty_dir: relay.pretty
+    pretty_dirs:
+      - relay.pretty
 
   - name: Packages_Resistor
     description: Resitor packages
-    pretty_dir: resistor.pretty
+    pretty_dirs:
+      - resistor.pretty
 
   - name: Packages_ResistorVariable
     description: Variable resitor packages
-    pretty_dir: resistor_variable.pretty
+    pretty_dirs:
+      - resistor_variable.pretty
 
   - name: Packages_Sensor
     description: Sensor packages
-    pretty_dir: package_SO.pretty
+    pretty_dirs:
+      - package_SO.pretty
 
   - name: Packages_Switch
     description: Switch packages
-    pretty_dir: switch.pretty
+    pretty_dirs:
+      - switch.pretty
 
   - name: Packages_Transistor
     description: Transistor packages
-    pretty_dir: package_TO_SOT.pretty
+    pretty_dirs:
+      - package_TO_SOT.pretty
 
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).

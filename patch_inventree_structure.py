@@ -206,7 +206,9 @@ def setup_selection_lists(structure):
     for sl in structure.get("selection_lists", []):
         _sync(sl["name"], sl["description"], sl["entries"])
     for psl in structure.get("package_selection_lists", []):
-        _sync(psl["name"], psl["description"], footprint_names(psl["pretty_dir"]))
+        dirs = psl.get("pretty_dirs") or [psl["pretty_dir"]]
+        entries = sorted({e for d in dirs for e in footprint_names(d)})
+        _sync(psl["name"], psl["description"], entries)
     for ssl in structure.get("symbol_selection_lists", []):
         _sync(ssl["name"], ssl["description"], symbol_names(ssl["symbol_file"]))
 

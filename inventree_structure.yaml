@@ -98,6 +98,7 @@ package_selection_lists:
     description: Connector packages
     pretty_dirs:
       - connector.pretty
+      - connector_jst.pretty
 
   - name: Packages_ConnectorPower
     description: Power connectors
@@ -348,6 +349,9 @@ parameter_templates:
 
   - name: MPN # top-level
     description: Manufacturer Part Number
+
+  - name: NbrOfPositions
+    description: Number of positions
 
   - name: Package_Capacitor
     description: Capacitor package
@@ -613,6 +617,7 @@ subcategories:
     description: Connector, generic
     icon: ti:plug:outline
     params:
+      - NbrOfPositions
       - Package_Connector
       - Symbol
       - Symbol_Connector

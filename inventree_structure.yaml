@@ -49,6 +49,10 @@ selection_lists:
     description: LED colour(s)
     entries: [Red/Yellow/Green]
 
+  - name: MCU_SizeCores
+    description: MCU core sizes
+    entries: [32-bit]
+
   - name: MountingTypes
     description: Surface Mount / Through Hole
     entries: [SMT, THT]
@@ -124,6 +128,10 @@ package_selection_lists:
     description: LED packages
     pretty_dir: led.pretty
 
+  - name: Packages_Microcontroller
+    description: Microcontroller packages
+    pretty_dir: package_QFP.pretty
+
   - name: Packages_PowerModule
     description: Power module packages
     pretty_dir: power_module.pretty
@@ -182,6 +190,10 @@ symbol_selection_lists:
   - name: Symbols_Isolator
     description: Isolator symbols
     symbol_file: isolator.kicad_sym
+
+  - name: Symbols_Microcontroller-ST
+    description: ST microcontroller symbols
+    symbol_file: microcontroller_st.kicad_sym
 
   - name: Symbols_PowerModule
     description: Power module symbols
@@ -291,6 +303,25 @@ parameter_templates:
   - name: Manufacturer # top-level
     description: Manufacturer name
 
+  - name: MCU_NbrIO
+    description: Number of I/O
+
+  - name: MCU_SizeCore
+    description: Core size
+    selectionlist: MCU_SizeCores
+
+  - name: MCU_SizeFlash
+    description: Flash size
+    unit: B
+
+  - name: MCU_SizeRAM
+    description: RAM size
+    unit: B
+
+  - name: MCU_Speed
+    description: Core speed
+    unit: Hz
+
   - name: MountingTypes # top-level
     description: Surface Mount / Through Hole
     selectionlist: MountingTypes
@@ -341,6 +372,10 @@ parameter_templates:
   - name: Package_LED
     description: LED package
     selectionlist: Packages_LED
+
+  - name: Package_Microcontroller
+    description: Microcontroller package
+    selectionlist: Packages_Microcontroller
 
   - name: Package_PowerModule
     description: Power module package
@@ -436,6 +471,10 @@ parameter_templates:
   - name: Symbol_LED
     description: LED symbol
     selectionlist: Symbols_LED
+
+  - name: Symbol_Microcontroller-ST
+    description: ST microcontroller symbol
+    selectionlist: Symbols_Microcontroller-ST
 
   - name: Symbol_PowerModule
     description: Power module symbol
@@ -693,6 +732,24 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: D
       footprint_param: Package_LED
+
+  - name: Microcontroller-ST
+    description: ST microcontrollers
+    icon: ti:cpu:outline
+    params:
+      - MCU_NbrIO
+      - MCU_SizeCore
+      - MCU_SizeFlash
+      - MCU_SizeRAM
+      - MCU_Speed
+      - Package_Microcontroller
+      - Symbol
+      - Symbol_Microcontroller-ST
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_Microcontroller
+      hide_fields: "Value"
 
   - name: PowerModule
     description: Power modules

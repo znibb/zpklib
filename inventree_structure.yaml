@@ -96,6 +96,10 @@ symbol_selection_lists:
     description: LED symbols
     symbol_file: led.kicad_sym
 
+  - name: Symbols_InterfaceEthernet
+    description: Ethernet symbols
+    symbol_file: interface_ethernet.kicad_sym
+
   - name: Symbols_Isolator
     description: Isolator symbols
     symbol_file: isolator.kicad_sym
@@ -158,6 +162,10 @@ package_selection_lists:
   - name: Packages_Inductor
     description: Inductor packages
     pretty_dir: inductor.pretty
+
+  - name: Packages_InterfaceEthernet
+    description: Ethernet packages
+    pretty_dir: package_QFP.pretty
 
   - name: Packages_Isolator
     description: Isolator packages
@@ -322,6 +330,10 @@ parameter_templates:
     description: Inductor package
     selectionlist: Packages_Inductor
 
+  - name: Package_InterfaceEthernet
+    description: Ethernet package
+    selectionlist: Packages_InterfaceEthernet
+
   - name: Package_Isolator
     description: Isolator package
     selectionlist: Packages_Isolator
@@ -416,6 +428,10 @@ parameter_templates:
   - name: Symbol_LED
     description: LED symbol
     selectionlist: Symbols_LED
+
+  - name: Symbol_InterfaceEthernet
+    description: Ethernet symbol
+    selectionlist: Symbols_InterfaceEthernet
 
   - name: Symbol_Isolator
     description: Isolator symbol
@@ -635,6 +651,18 @@ subcategories:
       default_symbol: inductor:Inductor
       default_reference: L
       footprint_param: Package_Inductor
+
+  - name: InterfaceEthernet
+    description: Ethernet ICs
+    icon: ti:cpu:outline
+    params:
+      - Package_InterfaceEthernet
+      - Symbol
+      - Symbol_InterfaceEthernet
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_InterfaceEthernet
 
   - name: Isolator
     description: Isolator, optocoupler

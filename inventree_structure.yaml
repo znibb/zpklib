@@ -77,57 +77,6 @@ selection_lists:
     description: Switching regulator functions
     entries: [Step-up, Step-down]
 
-# Symbol selection lists are derived from .kicad_sym files at runtime.
-# Each entry specifies the list name, description, and the symbol file path (relative to repo root).
-symbol_selection_lists:
-  - name: Symbols_Connector
-    description: Connector symbols
-    symbol_file: connector.kicad_sym
-
-  - name: Symbols_ConnectorPower
-    description: Power connector symbols
-    symbol_file: connector_power.kicad_sym
-
-  - name: Symbols_Fuse
-    description: Fuse symbols
-    symbol_file: fuse.kicad_sym
-
-  - name: Symbols_LED
-    description: LED symbols
-    symbol_file: led.kicad_sym
-
-  - name: Symbols_InterfaceEthernet
-    description: Ethernet symbols
-    symbol_file: interface_ethernet.kicad_sym
-
-  - name: Symbols_Isolator
-    description: Isolator symbols
-    symbol_file: isolator.kicad_sym
-
-  - name: Symbols_PowerModule
-    description: Power module symbols
-    symbol_file: power_module.kicad_sym
-
-  - name: Symbols_RegulatorSwitching
-    description: Switching regulator symbols
-    symbol_file: regulator_switching.kicad_sym
-
-  - name: Symbols_Relay
-    description: Relay symbols
-    symbol_file: relay.kicad_sym
-
-  - name: Symbols_Sensor
-    description: Sensor symbols
-    symbol_file: sensor.kicad_sym
-
-  - name: Symbols_Switch
-    description: Switch symbols
-    symbol_file: switch.kicad_sym
-
-  - name: Symbols_Transistor
-    description: Transistor symbols
-    symbol_file: transistor.kicad_sym
-
 # Package selection lists are derived from footprint directories at runtime.
 # Each entry specifies the list name, description, and the footprint pretty directory.
 package_selection_lists:
@@ -206,6 +155,57 @@ package_selection_lists:
   - name: Packages_Transistor
     description: Transistor packages
     pretty_dir: package_TO_SOT.pretty
+
+# Symbol selection lists are derived from .kicad_sym files at runtime.
+# Each entry specifies the list name, description, and the symbol file path (relative to repo root).
+symbol_selection_lists:
+  - name: Symbols_Connector
+    description: Connector symbols
+    symbol_file: connector.kicad_sym
+
+  - name: Symbols_ConnectorPower
+    description: Power connector symbols
+    symbol_file: connector_power.kicad_sym
+
+  - name: Symbols_Fuse
+    description: Fuse symbols
+    symbol_file: fuse.kicad_sym
+
+  - name: Symbols_LED
+    description: LED symbols
+    symbol_file: led.kicad_sym
+
+  - name: Symbols_InterfaceEthernet
+    description: Ethernet symbols
+    symbol_file: interface_ethernet.kicad_sym
+
+  - name: Symbols_Isolator
+    description: Isolator symbols
+    symbol_file: isolator.kicad_sym
+
+  - name: Symbols_PowerModule
+    description: Power module symbols
+    symbol_file: power_module.kicad_sym
+
+  - name: Symbols_RegulatorSwitching
+    description: Switching regulator symbols
+    symbol_file: regulator_switching.kicad_sym
+
+  - name: Symbols_Relay
+    description: Relay symbols
+    symbol_file: relay.kicad_sym
+
+  - name: Symbols_Sensor
+    description: Sensor symbols
+    symbol_file: sensor.kicad_sym
+
+  - name: Symbols_Switch
+    description: Switch symbols
+    symbol_file: switch.kicad_sym
+
+  - name: Symbols_Transistor
+    description: Transistor symbols
+    symbol_file: transistor.kicad_sym
 
 # Parameter templates.
 # unit: omit or leave empty for dimensionless
@@ -425,10 +425,6 @@ parameter_templates:
     description: Fuse symbol
     selectionlist: Symbols_Fuse
 
-  - name: Symbol_LED
-    description: LED symbol
-    selectionlist: Symbols_LED
-
   - name: Symbol_InterfaceEthernet
     description: Ethernet symbol
     selectionlist: Symbols_InterfaceEthernet
@@ -436,6 +432,10 @@ parameter_templates:
   - name: Symbol_Isolator
     description: Isolator symbol
     selectionlist: Symbols_Isolator
+
+  - name: Symbol_LED
+    description: LED symbol
+    selectionlist: Symbols_LED
 
   - name: Symbol_PowerModule
     description: Power module symbol

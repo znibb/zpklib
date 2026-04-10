@@ -410,7 +410,7 @@ def setup_kicad_mappings(structure, subcategory_pks, templates):
         if cat_pk is None:
             changes.append(f"  '{name}': {w('created', 'create')} kicad mapping (category pk unknown)")
             continue
-        value_param_name = kicad.get("value_param", "ValueStandard")
+        value_param_name = kicad.get("value_param", "ValueAlternate")
         desired = {
             "default_symbol": kicad["default_symbol"],
             "default_reference": kicad["default_reference"],

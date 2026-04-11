@@ -675,7 +675,9 @@ def main():
         else:
             print("  Skipped attachment upload (download failed).")
 
+    web_base = BASE_URL.removesuffix("/api")
     print(f"\nDone. Part '{name}' created (pk={part_pk})" + (f" IPN={ipn}" if ipn else "") + ".")
+    print(f"  URL: {web_base}/web/part/{part_pk}")
 
 
 if __name__ == "__main__":

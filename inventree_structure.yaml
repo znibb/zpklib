@@ -105,6 +105,11 @@ package_selection_lists:
     pretty_dirs:
       - connector_fan.pretty
 
+  - name: Packages_ConnectorPinHeader
+    description: Pin header packages
+    pretty_dirs:
+      - connector_pinheader.pretty
+
   - name: Packages_ConnectorPower
     description: Power connector packages
     pretty_dirs:
@@ -387,6 +392,10 @@ parameter_templates:
     description: Fan connector package
     selectionlist: Packages_ConnectorFan
 
+  - name: Package_ConnectorPinHeader
+    description: Pin header package
+    selectionlist: Packages_ConnectorPinHeader
+
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
@@ -668,6 +677,19 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_ConnectorFan
+
+  - name: ConnectorPinHeader
+    description: Pin headers
+    icon: 
+    params:
+      - NbrOfPositions
+      - Symbol
+      - Symbol_Connector
+      - Package_ConnectorPinHeader
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: J
+      footprint_param: Package_ConnectorPinHeader
 
   - name: ConnectorPower
     description: Power connectors

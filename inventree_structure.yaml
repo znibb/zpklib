@@ -215,6 +215,10 @@ symbol_selection_lists:
     description: Power connector symbols
     symbol_file: connector_power.kicad_sym
 
+  - name: Symbols_Crystal
+    description: Crystal symbols
+    symbol_file: crystal.kicad_sym
+
   - name: Symbols_Fuse
     description: Fuse symbols
     symbol_file: fuse.kicad_sym
@@ -527,6 +531,10 @@ parameter_templates:
     description: Power connector symbol
     selectionlist: Symbols_ConnectorPower
 
+  - name: Symbol_Crystal
+    description: Crystal symbol
+    selectionlist: Symbols_Crystal
+
   - name: Symbol_Fuse
     description: Fuse symbol
     selectionlist: Symbols_Fuse
@@ -716,13 +724,15 @@ subcategories:
       footprint_param: Package_ConnectorPower
 
   - name: Crystal
-    description: Crystals
+    description: Crystals, oscillators
     icon: ti:diamond:outline
     params:
       - Frequency
       - Package_Crystal
+      - Symbol
+      - Symbol_Crystal
     kicad:
-      default_symbol: crystal:Crystal
+      default_symbol: placeholder:BlankSymbol
       default_reference: X
       footprint_param: Package_Crystal
 
@@ -784,7 +794,7 @@ subcategories:
       default_symbol: fuse_holder:FuseHolder
       default_reference: FH
       footprint_param: Package_FuseHolder
-      hide_fields: "Value"
+      hide_fields: Value
 
   - name: Inductor
     description: Fixed value
@@ -859,7 +869,7 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_Microcontroller
-      hide_fields: "Value"
+      hide_fields: Value
 
   - name: PowerModule
     description: Power modules

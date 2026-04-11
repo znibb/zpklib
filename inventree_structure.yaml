@@ -115,6 +115,11 @@ package_selection_lists:
     pretty_dirs:
       - connector_power.pretty
 
+  - name: Packages_ConnectorUSB
+    description: USB connector packages
+    pretty_dirs:
+      - connector_usb.pretty
+
   - name: Packages_Crystal
     description: Crystal packages
     pretty_dirs:
@@ -214,6 +219,10 @@ symbol_selection_lists:
   - name: Symbols_ConnectorPower
     description: Power connector symbols
     symbol_file: connector_power.kicad_sym
+
+  - name: Symbols_ConnectorUSB
+    description: USB connector symbols
+    symbol_file: connector.kicad_sym
 
   - name: Symbols_Crystal
     description: Crystal symbols
@@ -412,8 +421,12 @@ parameter_templates:
     description: Power connector package
     selectionlist: Packages_ConnectorPower
 
+  - name: Package_ConnectorUSB
+    description: USB connector package
+    selectionlist: Packages_ConnectorUSB
+
   - name: Package_Crystal
-    description: Crystal packages
+    description: Crystal package
     selectionlist: Packages_Crystal
 
   - name: Package_Diode
@@ -530,6 +543,10 @@ parameter_templates:
   - name: Symbol_ConnectorPower
     description: Power connector symbol
     selectionlist: Symbols_ConnectorPower
+
+  - name: Symbol_ConnectorUSB
+    description: USB connector symbol
+    selectionlist: Symbols_ConnectorUSB
 
   - name: Symbol_Crystal
     description: Crystal symbol
@@ -696,7 +713,7 @@ subcategories:
 
   - name: ConnectorPinHeader
     description: Pin headers
-    icon: 
+    icon: ti:plug:outline
     params:
       - NbrOfPositions
       - Package_ConnectorPinHeader
@@ -722,6 +739,21 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_ConnectorPower
+
+  - name: ConnectorUSB
+    description: USB conenctors
+    icon: ti:usb:outline
+    params:
+      - ConnectorGender
+      - CurrentRating
+      - Package_ConnectorUSB
+      - Symbol
+      - Symbol_ConnectorUSB
+      - VoltageRating
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: J
+      footprint_param: Package_ConnectorUSB
 
   - name: Crystal
     description: Crystals, oscillators

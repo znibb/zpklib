@@ -20,7 +20,7 @@
 			)
 		)
 		(property "Value" "Value"
-			(at 0 -133.35 0)
+			(at 0 -139.7 0)
 			(show_name no)
 			(do_not_autoplace yes)
 			(effects
@@ -88,7 +88,7 @@
 		(symbol "TI-DP83848_0_1"
 			(rectangle
 				(start 0 0)
-				(end 53.34 -132.08)
+				(end 53.34 -138.43)
 				(stroke
 					(width 0.254)
 					(type default)
@@ -99,7 +99,7 @@
 			)
 			(polyline
 				(pts
-					(xy 5.08 -76.2) (xy 11.43 -76.2) (xy 11.43 -93.98) (xy 5.08 -93.98)
+					(xy 5.08 -76.2) (xy 11.43 -76.2) (xy 11.43 -97.79) (xy 5.08 -97.79)
 				)
 				(stroke
 					(width 0)
@@ -135,7 +135,7 @@
 			)
 			(polyline
 				(pts
-					(xy 11.43 -104.14) (xy 17.78 -104.14) (xy 17.78 -130.81) (xy 11.43 -130.81)
+					(xy 11.43 -107.95) (xy 17.78 -107.95) (xy 17.78 -137.16) (xy 11.43 -137.16)
 				)
 				(stroke
 					(width 0)
@@ -147,7 +147,7 @@
 			)
 			(polyline
 				(pts
-					(xy 36.83 -53.34) (xy 31.75 -53.34) (xy 31.75 -66.04) (xy 36.83 -66.04)
+					(xy 36.83 -57.15) (xy 31.75 -57.15) (xy 31.75 -69.85) (xy 36.83 -69.85)
 				)
 				(stroke
 					(width 0)
@@ -159,7 +159,7 @@
 			)
 			(polyline
 				(pts
-					(xy 45.72 -105.41) (xy 38.1 -105.41) (xy 38.1 -130.81) (xy 45.72 -130.81)
+					(xy 45.72 -111.76) (xy 38.1 -111.76) (xy 38.1 -137.16) (xy 45.72 -137.16)
 				)
 				(stroke
 					(width 0)
@@ -183,7 +183,7 @@
 			)
 			(polyline
 				(pts
-					(xy 48.26 -86.36) (xy 40.64 -86.36) (xy 40.64 -101.6) (xy 48.26 -101.6)
+					(xy 48.26 -88.9) (xy 40.64 -88.9) (xy 40.64 -104.14) (xy 48.26 -104.14)
 				)
 				(stroke
 					(width 0)
@@ -196,7 +196,7 @@
 		)
 		(symbol "TI-DP83848_1_1"
 			(text "OSC"
-				(at 7.62 -85.09 0)
+				(at 7.62 -87.63 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -212,7 +212,7 @@
 				)
 			)
 			(text "PWR"
-				(at 13.97 -116.84 0)
+				(at 13.97 -123.19 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -238,7 +238,7 @@
 				)
 			)
 			(text "LED"
-				(at 34.29 -59.69 0)
+				(at 34.29 -63.5 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -246,7 +246,7 @@
 				)
 			)
 			(text "MISC"
-				(at 41.91 -118.11 0)
+				(at 41.91 -124.46 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -262,7 +262,7 @@
 				)
 			)
 			(text "JTAG"
-				(at 44.45 -93.98 0)
+				(at 44.45 -96.52 0)
 				(effects
 					(font
 						(size 1.27 1.27)
@@ -378,7 +378,7 @@
 				)
 			)
 			(pin input line
-				(at -2.54 -110.49 0)
+				(at -2.54 -114.3 0)
 				(length 2.54)
 				(name "PWR_DOWN/INT"
 					(effects
@@ -396,7 +396,7 @@
 				)
 			)
 			(pin input line
-				(at 55.88 -93.98 180)
+				(at 55.88 -96.52 180)
 				(length 2.54)
 				(name "TCK"
 					(effects
@@ -414,7 +414,7 @@
 				)
 			)
 			(pin output line
-				(at 55.88 -96.52 180)
+				(at 55.88 -99.06 180)
 				(length 2.54)
 				(name "TDO"
 					(effects
@@ -432,7 +432,7 @@
 				)
 			)
 			(pin input line
-				(at 55.88 -88.9 180)
+				(at 55.88 -91.44 180)
 				(length 2.54)
 				(name "TMS"
 					(effects
@@ -450,7 +450,7 @@
 				)
 			)
 			(pin input line
-				(at 55.88 -91.44 180)
+				(at 55.88 -93.98 180)
 				(length 2.54)
 				(name "~{TRST}"
 					(effects
@@ -468,7 +468,7 @@
 				)
 			)
 			(pin input line
-				(at 55.88 -99.06 180)
+				(at 55.88 -101.6 180)
 				(length 2.54)
 				(name "TDI"
 					(effects
@@ -522,7 +522,7 @@
 				)
 			)
 			(pin power_in line
-				(at -2.54 -129.54 0)
+				(at -2.54 -135.89 0)
 				(length 2.54)
 				(name "AGND"
 					(effects
@@ -576,7 +576,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -118.11 180)
+				(at 55.88 -124.46 180)
 				(length 2.54)
 				(name "PFBIN1"
 					(effects
@@ -594,7 +594,7 @@
 				)
 			)
 			(pin passive line
-				(at -2.54 -129.54 0)
+				(at -2.54 -135.89 0)
 				(length 2.54)
 				(hide yes)
 				(name "AGND"
@@ -613,7 +613,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -125.73 180)
+				(at 55.88 -132.08 180)
 				(length 2.54)
 				(name "RESERVED"
 					(effects
@@ -631,7 +631,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -128.27 180)
+				(at 55.88 -134.62 180)
 				(length 2.54)
 				(name "RESERVED"
 					(effects
@@ -649,7 +649,7 @@
 				)
 			)
 			(pin power_in line
-				(at -2.54 -115.57 0)
+				(at -2.54 -119.38 0)
 				(length 2.54)
 				(name "AVDD33"
 					(effects
@@ -667,7 +667,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -113.03 180)
+				(at 55.88 -119.38 180)
 				(length 2.54)
 				(name "PFBOUT"
 					(effects
@@ -685,7 +685,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -107.95 180)
+				(at 55.88 -114.3 180)
 				(length 2.54)
 				(name "RBIAS"
 					(effects
@@ -721,7 +721,7 @@
 				)
 			)
 			(pin output line
-				(at 55.88 -55.88 180)
+				(at 55.88 -59.69 180)
 				(length 2.54)
 				(name "COL/AN_EN/LED_ACT"
 					(effects
@@ -739,7 +739,7 @@
 				)
 			)
 			(pin output line
-				(at 55.88 -63.5 180)
+				(at 55.88 -67.31 180)
 				(length 2.54)
 				(name "AN1/LED_SPEED"
 					(effects
@@ -757,7 +757,7 @@
 				)
 			)
 			(pin output line
-				(at 55.88 -59.69 180)
+				(at 55.88 -63.5 180)
 				(length 2.54)
 				(name "AN0/LED_LINK"
 					(effects
@@ -775,7 +775,7 @@
 				)
 			)
 			(pin input line
-				(at -2.54 -106.68 0)
+				(at -2.54 -110.49 0)
 				(length 2.54)
 				(name "~{RESET}"
 					(effects
@@ -829,7 +829,7 @@
 				)
 			)
 			(pin power_in line
-				(at -2.54 -119.38 0)
+				(at -2.54 -123.19 0)
 				(length 2.54)
 				(name "IOVDD33"
 					(effects
@@ -847,7 +847,7 @@
 				)
 			)
 			(pin output line
-				(at -2.54 -91.44 0)
+				(at -2.54 -95.25 0)
 				(length 2.54)
 				(name "X2"
 					(effects
@@ -865,7 +865,7 @@
 				)
 			)
 			(pin input line
-				(at -2.54 -83.82 0)
+				(at -2.54 -87.63 0)
 				(length 2.54)
 				(name "X1"
 					(effects
@@ -883,7 +883,7 @@
 				)
 			)
 			(pin power_in line
-				(at -2.54 -124.46 0)
+				(at -2.54 -130.81 0)
 				(length 2.54)
 				(name "IOGND"
 					(effects
@@ -901,7 +901,7 @@
 				)
 			)
 			(pin power_in line
-				(at -2.54 -127 0)
+				(at -2.54 -133.35 0)
 				(length 2.54)
 				(name "DGND"
 					(effects
@@ -919,7 +919,7 @@
 				)
 			)
 			(pin passive line
-				(at 55.88 -120.65 180)
+				(at 55.88 -127 180)
 				(length 2.54)
 				(name "PFBIN2"
 					(effects
@@ -1099,7 +1099,7 @@
 				)
 			)
 			(pin passive line
-				(at -2.54 -124.46 0)
+				(at -2.54 -130.81 0)
 				(length 2.54)
 				(hide yes)
 				(name "IOGND"
@@ -1117,10 +1117,9 @@
 					)
 				)
 			)
-			(pin passive line
-				(at -2.54 -119.38 0)
+			(pin power_in line
+				(at -2.54 -125.73 0)
 				(length 2.54)
-				(hide yes)
 				(name "IOVDD33"
 					(effects
 						(font

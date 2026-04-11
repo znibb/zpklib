@@ -264,6 +264,14 @@ symbol_selection_lists:
 # checkbox: omit to default to false
 # selectionlist: name of a selection list, omit for free-text
 parameter_templates:
+  - name: ActuatorLength
+    description: Actuator length
+    unit: mm
+
+  - name: ActuatorOperatingForce
+    description: Actuator operating force
+    unit: g
+    
   - name: ActuatorOrientation
     description: Actuator orientation
     selectionlist: ActuatorOrientations
@@ -683,13 +691,14 @@ subcategories:
     icon: 
     params:
       - NbrOfPositions
+      - Package_ConnectorPinHeader
       - Symbol
       - Symbol_Connector
-      - Package_ConnectorPinHeader
     kicad:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_ConnectorPinHeader
+      hide_fields: Value
 
   - name: ConnectorPower
     description: Power connectors
@@ -939,17 +948,17 @@ subcategories:
       default_reference: U
       footprint_param: Package_Sensor
 
-  - name: Switch
+  - name: SwitchPush
     description: Switches
     icon: ti:circuit-pushbutton:outline
     params:
+      - ActuatorLength
+      - ActuatorOperatingForce
       - ActuatorOrientation
       - CurrentRating
       - Package_Switch
-      - Symbol
-      - Symbol_Switch
     kicad:
-      default_symbol: placeholder:BlankSymbol
+      default_symbol: switch:SW_Push
       default_reference: SW
       footprint_param: Package_Switch
 

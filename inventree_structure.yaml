@@ -905,6 +905,8 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: D
       footprint_param: Package_LED
+      hide_fields: Value
+      show_extra_fields: LED_Colour
 
   - name: Microcontroller-ST
     description: ST microcontrollers
@@ -923,6 +925,7 @@ subcategories:
       default_reference: U
       footprint_param: Package_Microcontroller
       hide_fields: Value
+
 
   - name: PowerModule
     description: Power modules

@@ -57,6 +57,10 @@ selection_lists:
     description: Surface Mount / Through Hole
     entries: [SMT, THT]
 
+  - name: PowerProtectionApplications
+    description: Power protection application
+    entries: [Generic, USB, Ethernet, UART]
+
   - name: RelayCoilTypes
     description: Relay coil type
     entries: [Latching, Non-latching]
@@ -170,6 +174,11 @@ package_selection_lists:
     pretty_dirs:
       - power_module.pretty
 
+  - name: Packages_PowerProtection
+    description: Power protection device packages
+    pretty_dirs:
+      - package_TO_SOT.pretty
+
   - name: Packages_RegulatorSwitching
     description: Switching regulator packages
     pretty_dirs:
@@ -251,6 +260,10 @@ symbol_selection_lists:
   - name: Symbols_PowerModule
     description: Power module symbols
     symbol_file: power_module.kicad_sym
+
+  - name: Symbols_PowerProtection
+    description: Power protection symbols
+    symbol_file: power_protection.kicad_sym
 
   - name: Symbols_RegulatorSwitching
     description: Switching regulator symbols
@@ -465,6 +478,10 @@ parameter_templates:
     description: Power module package
     selectionlist: Packages_PowerModule
 
+  - name: Package_PowerProtection
+    description: Power protection device package
+    selectionlist: Packages_PowerProtection
+
   - name: Package_RegulatorSwitching
     description: Switching regulator package
     selectionlist: Packages_RegulatorSwitching
@@ -575,6 +592,10 @@ parameter_templates:
   - name: Symbol_PowerModule
     description: Power module symbol
     selectionlist: Symbols_PowerModule
+
+  - name: Symbol_PowerProtection
+    description: Power protection symbol
+    selectionlist: Symbols_PowerProtection
 
   - name: Symbol_RegulatorSwitching
     description: Switching regulator symbol
@@ -918,6 +939,20 @@ subcategories:
       default_reference: U
       footprint_param: Package_PowerModule
       show_extra_fields: Power
+
+  - name: PowerProtection
+    description: Power protection devices
+    icon: ti:shield:outline
+    params:
+      - Channels
+      - Package_PowerProtection
+      - PowerProtectionApplications
+      - Symbol
+      - Symbol_PowerProtection
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_PowerProtection
 
   - name: RegulatorSwitching
     description: Switching regulators

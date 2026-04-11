@@ -88,7 +88,7 @@ def api_upload(path, fields, file_bytes, filename, mime_type="application/octet-
 def download_datasheet(url):
     """Download a file from url and return (bytes, extension, mime_type), or (None, None, None)."""
     try:
-        r = requests.get(url, timeout=60)
+        r = requests.get(url, timeout=10)
         r.raise_for_status()
     except requests.RequestException as e:
         print(f"  Warning: could not download datasheet: {e}", file=sys.stderr)

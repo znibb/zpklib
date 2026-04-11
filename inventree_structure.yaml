@@ -106,9 +106,14 @@ package_selection_lists:
       - connector_fan.pretty
 
   - name: Packages_ConnectorPower
-    description: Power connectors
+    description: Power connector packages
     pretty_dirs:
       - connector_power.pretty
+
+  - name: Packages_Crystal
+    description: Crystal packages
+    pretty_dirs:
+      - crystal.pretty
 
   - name: Packages_Diode
     description: Diode packages
@@ -305,8 +310,12 @@ parameter_templates:
     unit: Ω
 
   - name: FET_Type
-    description: FET_Type
+    description: FET Type
     selectionlist: FET_Types
+
+  - name: Frequency
+    description: Frequency
+    unit: Hz
 
   - name: FuseCase
     description: Fuse case
@@ -381,6 +390,10 @@ parameter_templates:
   - name: Package_ConnectorPower
     description: Power connector package
     selectionlist: Packages_ConnectorPower
+
+  - name: Package_Crystal
+    description: Crystal packages
+    selectionlist: Packages_Crystal
 
   - name: Package_Diode
     description: Diode package
@@ -670,6 +683,17 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: J
       footprint_param: Package_ConnectorPower
+
+  - name: Crystal
+    description: Crystals
+    icon: ti:diamond:outline
+    params:
+      - Frequency
+      - Package_Crystal
+    kicad:
+      default_symbol: crystal:Crystal
+      default_reference: X
+      footprint_param: Package_Crystal
 
   - name: DiodeRectifier
     description: Diode, rectifier

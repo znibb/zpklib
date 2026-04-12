@@ -86,7 +86,7 @@
 					(type background)
 				)
 			)
-			(pin output line
+			(pin input line
 				(at 11.43 -2.54 180)
 				(length 2.54)
 				(name "VCC"
@@ -121,9 +121,9 @@
 						)
 					)
 				)
-				(alternate "TMS" input line)
+				(alternate "TMS" output line)
 			)
-			(pin input line
+			(pin output line
 				(at 11.43 -7.62 180)
 				(length 2.54)
 				(name "~{RESET}"
@@ -141,7 +141,7 @@
 					)
 				)
 			)
-			(pin input line
+			(pin output line
 				(at 11.43 -10.16 180)
 				(length 2.54)
 				(name "SWCLK"
@@ -158,7 +158,7 @@
 						)
 					)
 				)
-				(alternate "TCK" input line)
+				(alternate "TCK" output line)
 			)
 			(pin passive line
 				(at 11.43 -12.7 180)
@@ -178,7 +178,7 @@
 					)
 				)
 			)
-			(pin output line
+			(pin input line
 				(at 11.43 -15.24 180)
 				(length 2.54)
 				(name "SWO"

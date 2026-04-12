@@ -3,7 +3,7 @@
 	(generator "kicad_symbol_editor")
 	(generator_version "10.0")
 	(symbol "Earth"
-		(power global)
+		(power local)
 		(pin_numbers
 			(hide yes)
 		)
@@ -11,10 +11,10 @@
 			(offset 0)
 			(hide yes)
 		)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
 		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "#PWR"
 			(at 0 -6.35 0)
@@ -59,7 +59,7 @@
 				)
 			)
 		)
-		(property "Description" "Global earth symbol"
+		(property "Description" "Local earth symbol"
 			(at 0 11.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -70,7 +70,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global ground gnd"
+		(property "ki_keywords" "local ground gnd"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -154,7 +154,7 @@
 		(embedded_fonts no)
 	)
 	(symbol "EarthProtective"
-		(power global)
+		(power local)
 		(pin_numbers
 			(hide yes)
 		)
@@ -162,10 +162,10 @@
 			(offset 0)
 			(hide yes)
 		)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
 		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "#PWR"
 			(at 0 -10.16 0)
@@ -210,7 +210,7 @@
 				)
 			)
 		)
-		(property "Description" "Global protective earth symbol"
+		(property "Description" "Local protective earth symbol"
 			(at 0 11.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -221,7 +221,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global ground gnd clean"
+		(property "ki_keywords" "local ground gnd clean"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -316,7 +316,7 @@
 		(embedded_fonts no)
 	)
 	(symbol "GND"
-		(power global)
+		(power local)
 		(pin_numbers
 			(hide yes)
 		)
@@ -324,10 +324,10 @@
 			(offset 0)
 			(hide yes)
 		)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
 		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "#PWR"
 			(at 0 -6.35 0)
@@ -372,7 +372,7 @@
 				)
 			)
 		)
-		(property "Description" "Global ground symbol"
+		(property "Description" "Local ground symbol"
 			(at 0 11.43 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -383,7 +383,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global power"
+		(property "ki_keywords" "local power"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -573,8 +573,8 @@
 		)
 		(embedded_fonts no)
 	)
-	(symbol "Power"
-		(power global)
+	(symbol "PWR_FLAG"
+		(power local)
 		(pin_numbers
 			(hide yes)
 		)
@@ -582,10 +582,125 @@
 			(offset 0)
 			(hide yes)
 		)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(in_pos_files yes)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
+		(duplicate_pin_numbers_are_jumpers no)
+		(property "Reference" "#FLG"
+			(at 0 6.35 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 0 3.81 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Datasheet" ""
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 0 8.89 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "ki_keywords" "flag power"
+			(at 0 0 0)
+			(show_name no)
+			(do_not_autoplace no)
+			(hide yes)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(symbol "PWR_FLAG_0_0"
+			(pin power_out line
+				(at 0 0 90)
+				(length 0)
+				(name ""
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+				(number "1"
+					(effects
+						(font
+							(size 1.27 1.27)
+						)
+					)
+				)
+			)
+		)
+		(symbol "PWR_FLAG_0_1"
+			(polyline
+				(pts
+					(xy 0 0) (xy 0 1.27) (xy -1.016 1.905) (xy 0 2.54) (xy 1.016 1.905) (xy 0 1.27)
+				)
+				(stroke
+					(width 0)
+					(type default)
+				)
+				(fill
+					(type none)
+				)
+			)
+		)
+		(embedded_fonts no)
+	)
+	(symbol "Power"
+		(power local)
+		(pin_numbers
+			(hide yes)
+		)
+		(pin_names
+			(offset 0)
+			(hide yes)
+		)
+		(exclude_from_sim yes)
+		(in_bom no)
+		(on_board no)
+		(in_pos_files no)
 		(duplicate_pin_numbers_are_jumpers no)
 		(property "Reference" "#PWR"
 			(at 0 6.35 0)
@@ -630,7 +745,7 @@
 				)
 			)
 		)
-		(property "Description" "Global power symbol"
+		(property "Description" "Local power symbol"
 			(at 0 8.89 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -641,7 +756,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global power"
+		(property "ki_keywords" "local power"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -757,7 +872,7 @@
 				)
 			)
 		)
-		(property "Description" "Global power symbol"
+		(property "Description" "Local power symbol"
 			(at 0 8.89 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -768,7 +883,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global power"
+		(property "ki_keywords" "local power"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -826,7 +941,7 @@
 				)
 			)
 		)
-		(property "Description" "Global power symbol"
+		(property "Description" "Local power symbol"
 			(at 0 8.89 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -837,7 +952,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global power"
+		(property "ki_keywords" "local power"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -895,7 +1010,7 @@
 				)
 			)
 		)
-		(property "Description" "Global power symbol"
+		(property "Description" "Local power symbol"
 			(at 0 8.89 0)
 			(show_name no)
 			(do_not_autoplace no)
@@ -906,7 +1021,7 @@
 				)
 			)
 		)
-		(property "ki_keywords" "global power"
+		(property "ki_keywords" "local power"
 			(at 0 0 0)
 			(show_name no)
 			(do_not_autoplace no)

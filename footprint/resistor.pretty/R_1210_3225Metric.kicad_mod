@@ -1,18 +1,17 @@
 (footprint "R_1210_3225Metric"
-	(version 20241229)
+	(version 20260206)
 	(generator "pcbnew")
-	(generator_version "9.0")
+	(generator_version "10.0")
 	(layer "F.Cu")
 	(descr "Resistor SMD 1210 (3225 Metric), square (rectangular) end terminal, IPC-7351 nominal, (Body size source: IPC-SM-782 page 72, https://www.pcb-3d.com/wordpress/wp-content/uploads/ipc-sm-782a_amendment_1_and_2.pdf), generated with kicad-footprint-generator")
 	(tags "resistor")
 	(property "Reference" "REF**"
 		(at 0 -2.28 0)
 		(layer "F.SilkS")
-		(uuid "87ff97eb-95a9-407a-9508-99657897574d")
+		(uuid "d0d581ee-6c2c-4dfa-9e5d-ada97168e510")
 		(effects
 			(font
 				(size 1 1)
-				(thickness 0.15)
 			)
 		)
 	)
@@ -20,7 +19,7 @@
 		(at 0 2.28 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "eb30d6cc-c01a-4a93-b9a7-c9cca03c69ef")
+		(uuid "71a2c42c-3903-4755-b6bf-47cde456df8e")
 		(effects
 			(font
 				(size 1 1)
@@ -32,7 +31,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "ab2e0924-528d-438d-919e-43c62450aeea")
+		(uuid "6313668f-eb01-4307-9cdf-10a3bdee126a")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -44,7 +43,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "fed81dc2-b995-4fba-abe3-5b1e3a843670")
+		(uuid "fd29e286-b153-4f84-9262-fbde39514c53")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -53,6 +52,7 @@
 		)
 	)
 	(attr smd)
+	(duplicate_pad_numbers_are_jumpers no)
 	(fp_line
 		(start -0.723737 -1.355)
 		(end 0.723737 -1.355)
@@ -61,7 +61,7 @@
 			(type solid)
 		)
 		(layer "F.SilkS")
-		(uuid "7615c0b4-eda9-4dea-b894-fc7b80850aae")
+		(uuid "032cc911-a08b-46b5-bf88-823643eb15f3")
 	)
 	(fp_line
 		(start -0.723737 1.355)
@@ -71,7 +71,7 @@
 			(type solid)
 		)
 		(layer "F.SilkS")
-		(uuid "3cb25ce3-abb3-491b-ac03-6ae38a0e6ad0")
+		(uuid "4f21c17c-aa5b-494e-aaf9-fdb79094bcd3")
 	)
 	(fp_rect
 		(start -2.28 -1.58)
@@ -82,7 +82,7 @@
 		)
 		(fill no)
 		(layer "F.CrtYd")
-		(uuid "d8cb294f-e7d1-48fa-a71a-b7cf605e9e50")
+		(uuid "61931cf1-8af6-4d23-97af-292848be0bba")
 	)
 	(fp_rect
 		(start -1.6 -1.245)
@@ -93,16 +93,15 @@
 		)
 		(fill no)
 		(layer "F.Fab")
-		(uuid "210d311d-96d0-4413-b7d8-5758ab882e5f")
+		(uuid "de9910a1-72a9-4539-819d-b1a5fe55e72f")
 	)
 	(fp_text user "${REFERENCE}"
 		(at 0 0 0)
 		(layer "F.Fab")
-		(uuid "21569b56-3ee5-4a67-a605-34195dfea830")
+		(uuid "fa042b0e-4e17-494e-959c-f0810bde8aa5")
 		(effects
 			(font
-				(size 0.8 0.8)
-				(thickness 0.12)
+				(size 1 1)
 			)
 		)
 	)
@@ -111,14 +110,14 @@
 		(size 1.125 2.65)
 		(layers "F.Cu" "F.Mask" "F.Paste")
 		(roundrect_rratio 0.222222)
-		(uuid "b2d8fc90-6858-4ea8-8dfa-d9ed0053dda5")
+		(uuid "d85a787d-5815-4722-a77f-bbd4cee0b4cd")
 	)
 	(pad "2" smd roundrect
 		(at 1.4625 0)
 		(size 1.125 2.65)
 		(layers "F.Cu" "F.Mask" "F.Paste")
 		(roundrect_rratio 0.222222)
-		(uuid "a6768bc7-df56-4423-ba37-364ae8052135")
+		(uuid "078293dd-cfd6-4b3f-b83b-97830a57d08b")
 	)
 	(embedded_fonts no)
 	(embedded_files

@@ -46,6 +46,13 @@ kivad:
 ```
 to that category in `inventree_structure.yaml`.
 
+## KiCad layer specific usage
+| Layer | Usage |
+| :---- | :---- |
+| User.Drawings | Overlay on Assembly drawing, for dimensions etc. |
+| User.Comments | Footprint-specific notes, connector protrusion etc. |
+| User.1 | PCBA comments, stackup details, impedances etc. |
+
 ## EMS Capabilities
 EMS:
 - [JLCPCB](docs/capabilities_JLCPCB.md)

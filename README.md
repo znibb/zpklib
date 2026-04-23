@@ -51,7 +51,7 @@ to that category in `inventree_structure.yaml`.
 | :---- | :---- |
 | User.Drawings | Overlay on Assembly drawing, for dimensions etc. |
 | User.Comments | Footprint-specific notes, connector protrusion etc. |
-| User.1 | PCBA comments, stackup details, impedances etc. |
+| User.1 | PCB comments, stackup details, impedances etc. |
 
 ## EMS Capabilities
 EMS:

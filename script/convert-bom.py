@@ -28,9 +28,12 @@ def main():
             convert_jlc(df_in, base_name)
         case "dk":
             convert_dk(df_in, base_name)
+        case "pcbway":
+            convert_pcbway(df_in, base_name)
         case "all":
             convert_jlc(df_in, base_name)
             convert_dk(df_in, base_name)
+            convert_pcbway(df_in, base_name)
         case _:
             print(f"Unknown EMS format: {args.ems}")
 
@@ -46,7 +49,7 @@ def convert_jlc(df_in, base_name):
     df_out["Footprint"] = df_in["Footprint"].str.replace(r"^[^:]+:", "", regex=True) # Strip library name from footprint
 
     # Construct output filename
-    output_file = f"{base_name}_BOM_JLC.csv"
+    output_file = f"{base_name}_BOM_JLCPCB.csv"
 
     # Save to file
     df_out.to_csv(output_file, sep=",", index=False)
@@ -68,7 +71,30 @@ def convert_dk(df_in, base_name):
     df_out["Description"] = df_in["Description"]
 
     # Construct output filename
-    output_file = f"{base_name}_BOM_DK.csv"
+    output_file = f"{base_name}_BOM_Digikey.csv"
+
+    # Save to file
+    df_out.to_csv(output_file, sep=",", index=False)
+    print(f"Success: Converted BOM file written to {output_file}")
+
+# PCBWay
+def convert_pcbway(df_in, base_name):
+    # Create output DataFrame
+    df_out = pd.DataFrame()
+
+    # Remove DNP items
+    df_in = df_in[df_in["DNP"].isna() | (df_in["DNP"] == "")]
+
+    # Convert and populate fields
+    df_out["Reference Designator"] = df_in["Reference"].str.replace(" ", ",")
+    df_out["Quantity Per Part Number"] = df_in["Qty"]
+    df_out["Manufacturers Name"] = df_in["Manufacturer"]
+    df_out["Manufacturers Part Number"] = df_in["MPN"]
+    df_out["Part Description"] = df_in["Description"]
+    df_out["Package"] = df_in["Footprint"].str.replace(r"^[^:]+:", "", regex=True)
+
+    # Construct output filename
+    output_file = f"{base_name}_BOM_PCBWay.csv"
 
     # Save to file
     df_out.to_csv(output_file, sep=",", index=False)

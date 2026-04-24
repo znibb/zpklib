@@ -24,8 +24,11 @@ def main():
     match ems.lower():
         case "jlc":
             convert_jlc(df_in, base_name)
+        case "pcbway":
+            convert_pcbway(df_in, base_name)
         case "all":
             convert_jlc(df_in, base_name)
+            convert_pcbway(df_in, base_name)
         case _:
             print(f"Unknown EMS format: {args.ems}")
 
@@ -43,6 +46,25 @@ def convert_jlc(df_in, base_name):
 
     # Construct output filename
     output_file = f"{base_name}_PNP_JLC.csv"
+
+    # Save to file
+    df_out.to_csv(output_file, sep=",", index=False)
+    print(f"Success: Converted PNP file written to {output_file}")
+
+# PCBWay
+def convert_pcbway(df_in, base_name):
+    # Create output DataFrame
+    df_out = pd.DataFrame()
+
+    # Convert and populate fields
+    df_out["Reference Designator"] = df_in["Ref"]
+    df_out["Mid X"] = df_in["PosX"].astype(str) + "mm"
+    df_out["Mid Y"] = df_in["PosY"].astype(str) + "mm"
+    df_out["Layer"] = df_in["Side"].map({"top": "Top", "bottom": "Bottom"})
+    df_out["Rotation"] = df_in["Rot"]
+
+    # Construct output filename
+    output_file = f"{base_name}_PNP_PCBWay.csv"
 
     # Save to file
     df_out.to_csv(output_file, sep=",", index=False)

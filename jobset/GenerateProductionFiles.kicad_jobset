@@ -358,7 +358,7 @@
       "description": "Convert BOM to EMS formats",
       "id": "78286ea8-ae19-43b0-b0dc-56ca7ec73afe",
       "settings": {
-        "command": ".venv/bin/python ${ZPKLIB_DIR}/script/convert-bom.py ${JOBSET_OUTPUT_WORK_PATH}${PROJECTNAME}_v${VERSION}_BOM_Generic.csv all",
+        "command": ".venv/bin/python ${ZPKLIB_DIR}/script/convert-bom.py ${JOBSET_OUTPUT_WORK_PATH}${PROJECTNAME}_v${VERSION}_BOM_Generic.csv dk",
         "description": "",
         "ignore_exit_code": false,
         "output_filename": "",
@@ -386,66 +386,6 @@
         "variant": ""
       },
       "type": "pcb_export_pos"
-    },
-    {
-      "description": "",
-      "id": "412ba608-3fe6-4f45-915f-c90a16c76297",
-      "settings": {
-        "board_only": false,
-        "board_outlines_chaining_epsilon": 0.01,
-        "cut_vias_in_body": false,
-        "description": "",
-        "export_board_body": true,
-        "export_components": true,
-        "export_inner_copper": false,
-        "export_pads": false,
-        "export_silkscreen": false,
-        "export_soldermask": false,
-        "export_tracks": false,
-        "export_zones": false,
-        "fill_all_vias": false,
-        "format": "step",
-        "fuse_shapes": false,
-        "include_dnp": false,
-        "include_unspecified": true,
-        "occt_format": 0,
-        "optimize_step": true,
-        "output_filename": "${PROJECTNAME}_v${VERSION}_3D-model.step",
-        "overwrite": false,
-        "subst_models": true,
-        "use_defined_origin": false,
-        "use_drill_origin": true,
-        "use_grid_origin": false,
-        "use_pcb_center_origin": false,
-        "user_origin.x": 0.0,
-        "user_origin.y": 0.0,
-        "vrml_model_dir": "",
-        "vrml_relative_paths": false
-      },
-      "type": "pcb_export_3d"
-    },
-    {
-      "description": "Schematic PDF",
-      "id": "83046292-86ce-4b05-872d-583cb2626119",
-      "settings": {
-        "black_and_white": false,
-        "color_theme": "KiCad Classic",
-        "description": "",
-        "drawing_sheet": "",
-        "format": "pdf",
-        "min_pen_width": 847,
-        "output_filename": "${PROJECTNAME}_v${VERSION}_Schematic.pdf",
-        "page_size": "auto",
-        "pdf_hierarchical_links": true,
-        "pdf_metadata": true,
-        "pdf_property_popups": true,
-        "plot_all": true,
-        "plot_drawing_sheet": true,
-        "show_hop_over": false,
-        "use_background_color": true,
-        "variant_name": ""
-      },
-      "type": "sch_export_plot_pdf"
     },
     {
       "description": "Assembly Drawing PDF",
@@ -582,6 +522,66 @@
       "type": "pcb_export_pdf"
     },
     {
+      "description": "",
+      "id": "412ba608-3fe6-4f45-915f-c90a16c76297",
+      "settings": {
+        "board_only": false,
+        "board_outlines_chaining_epsilon": 0.01,
+        "cut_vias_in_body": false,
+        "description": "",
+        "export_board_body": true,
+        "export_components": true,
+        "export_inner_copper": false,
+        "export_pads": false,
+        "export_silkscreen": false,
+        "export_soldermask": false,
+        "export_tracks": false,
+        "export_zones": false,
+        "fill_all_vias": false,
+        "format": "step",
+        "fuse_shapes": false,
+        "include_dnp": false,
+        "include_unspecified": true,
+        "occt_format": 0,
+        "optimize_step": true,
+        "output_filename": "${PROJECTNAME}_v${VERSION}_3D-model.step",
+        "overwrite": false,
+        "subst_models": true,
+        "use_defined_origin": false,
+        "use_drill_origin": true,
+        "use_grid_origin": false,
+        "use_pcb_center_origin": false,
+        "user_origin.x": 0.0,
+        "user_origin.y": 0.0,
+        "vrml_model_dir": "",
+        "vrml_relative_paths": false
+      },
+      "type": "pcb_export_3d"
+    },
+    {
+      "description": "Schematic PDF",
+      "id": "83046292-86ce-4b05-872d-583cb2626119",
+      "settings": {
+        "black_and_white": false,
+        "color_theme": "KiCad Classic",
+        "description": "",
+        "drawing_sheet": "",
+        "format": "pdf",
+        "min_pen_width": 847,
+        "output_filename": "${PROJECTNAME}_v${VERSION}_Schematic.pdf",
+        "page_size": "auto",
+        "pdf_hierarchical_links": true,
+        "pdf_metadata": true,
+        "pdf_property_popups": true,
+        "plot_all": true,
+        "plot_drawing_sheet": true,
+        "show_hop_over": false,
+        "use_background_color": true,
+        "variant_name": ""
+      },
+      "type": "sch_export_plot_pdf"
+    },
+    {
       "description": "PCB Layers PDF",
       "id": "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1",
       "settings": {
@@ -713,10 +713,26 @@
       "id": "f1983e13-988f-4089-a51d-2c6360d02828",
       "only": [
         "8e0f6d00-8d06-41e3-b987-7dcd77cf5427",
-        "02fbfe03-1a47-4670-b338-d95710774c52"
+        "78286ea8-ae19-43b0-b0dc-56ca7ec73afe",
+        "02fbfe03-1a47-4670-b338-d95710774c52",
+        "1890905d-5c8e-4592-bb02-54dc3d4c31fc",
+        "362087bb-26dc-4911-a937-52f411b8535e"
       ],
       "settings": {
         "output_path": "output/PCBA/"
+      },
+      "type": "folder"
+    },
+    {
+      "description": "Source",
+      "id": "84f30d1d-23f9-43a1-8fe4-5e9bbf6d9158",
+      "only": [
+        "412ba608-3fe6-4f45-915f-c90a16c76297",
+        "83046292-86ce-4b05-872d-583cb2626119",
+        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1"
+      ],
+      "settings": {
+        "output_path": "output/"
       },
       "type": "folder"
     },
@@ -736,21 +752,6 @@
       "id": "65558246-1799-4222-9d5c-768373b2834a",
       "only": [
         "a763fd2f-fb83-4644-a7dd-c9845e7bff58"
-      ],
-      "settings": {
-        "output_path": "output/"
-      },
-      "type": "folder"
-    },
-    {
-      "description": "Source",
-      "id": "84f30d1d-23f9-43a1-8fe4-5e9bbf6d9158",
-      "only": [
-        "412ba608-3fe6-4f45-915f-c90a16c76297",
-        "83046292-86ce-4b05-872d-583cb2626119",
-        "1890905d-5c8e-4592-bb02-54dc3d4c31fc",
-        "362087bb-26dc-4911-a937-52f411b8535e",
-        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1"
       ],
       "settings": {
         "output_path": "output/"

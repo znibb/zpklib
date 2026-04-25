@@ -2,7 +2,7 @@
 """
 Create an assembly part in InvenTree from a KiCad BOM CSV file.
 
-Reads a _BOM_Generic.csv, looks up each component by IPN, creates a new
+Reads a *_BOM_Generic.csv BOM file, looks up each component by IPN, creates a new
 assembly part under the electronic-assemblies category, and populates its
 Bill of Materials. DNP rows are excluded.
 
@@ -53,6 +53,14 @@ def api_post(path, data):
 
 def as_list(data):
     return data if isinstance(data, list) else data.get("results", [])
+
+
+def parse_semver(revision):
+    """Parse a vMAJOR.MINOR.PATCH string. Returns (major, minor, patch) or None."""
+    m = re.match(r"^v?(\d+)\.(\d+)\.(\d+)$", revision.strip())
+    if not m:
+        return None
+    return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
 
 
 def find_category(name):
@@ -194,7 +202,20 @@ def main():
     existing = find_assembly_by_name(name, category["pk"])
     if existing:
         ipn = existing.get("IPN") or ipn
-        print(f"\nFound existing assembly pk={existing['pk']} (IPN={ipn}, revision={existing.get('revision') or '(none)'})")
+        current_revision = existing.get("revision") or ""
+        print(f"\nFound existing assembly pk={existing['pk']} (IPN={ipn}, revision={current_revision or '(none)'})")
+
+        current_ver = parse_semver(current_revision)
+        new_ver = parse_semver(revision)
+
+        if current_ver is None:
+            print(f"  Warning: current revision '{current_revision}' is not a valid semver — skipping version check.")
+        elif new_ver is None:
+            print(f"ERROR: new revision '{revision}' is not a valid semver (expected vMAJOR.MINOR.PATCH).", file=sys.stderr)
+            sys.exit(1)
+        elif new_ver < current_ver:
+            print(f"ERROR: cannot downgrade from {current_revision} to {revision}.", file=sys.stderr)
+            sys.exit(1)
     else:
         ipn = input(f"IPN [{suggested_ipn}]: ").strip() or suggested_ipn
 

@@ -678,6 +678,112 @@
         "record_output": false
       },
       "type": "special_execute"
+    },
+    {
+      "description": "Render Top",
+      "id": "b429e79e-38e2-48b8-b987-9d07910e263b",
+      "settings": {
+        "anti_alias": false,
+        "bg_style": "opaque",
+        "description": "",
+        "floor": false,
+        "format": "png",
+        "height": 1200,
+        "light_bottom_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "light_camera_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "light_side_elevation": 60,
+        "light_side_intensity": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "light_top_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "output_filename": "PCB_Render_Top.png",
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "pan_z": 0.0,
+        "perspective": false,
+        "pivot_x": 0.0,
+        "pivot_y": 0.0,
+        "pivot_z": 0.0,
+        "post_process": false,
+        "preset": "",
+        "procedural_textures": false,
+        "quality": "basic",
+        "rotation_x": 0.0,
+        "rotation_y": 0.0,
+        "rotation_z": 0.0,
+        "side": "top",
+        "use_board_stackup_colors": true,
+        "width": 1920,
+        "zoom": 1.0
+      },
+      "type": "pcb_render"
+    },
+    {
+      "description": "Render Bottom",
+      "id": "8e438726-1fa3-4805-bf15-558cf06de336",
+      "settings": {
+        "anti_alias": false,
+        "bg_style": "opaque",
+        "description": "",
+        "floor": false,
+        "format": "png",
+        "height": 1200,
+        "light_bottom_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "light_camera_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "light_side_elevation": 60,
+        "light_side_intensity": [
+          0.5,
+          0.5,
+          0.5
+        ],
+        "light_top_intensity": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "output_filename": "PCB_Render_Bottom.png",
+        "pan_x": 0.0,
+        "pan_y": 0.0,
+        "pan_z": 0.0,
+        "perspective": false,
+        "pivot_x": 0.0,
+        "pivot_y": 0.0,
+        "pivot_z": 0.0,
+        "post_process": false,
+        "preset": "",
+        "procedural_textures": false,
+        "quality": "basic",
+        "rotation_x": 0.0,
+        "rotation_y": 0.0,
+        "rotation_z": 0.0,
+        "side": "bottom",
+        "use_board_stackup_colors": true,
+        "width": 1920,
+        "zoom": 1.0
+      },
+      "type": "pcb_render"
     }
   ],
   "meta": {
@@ -729,7 +835,10 @@
       "only": [
         "412ba608-3fe6-4f45-915f-c90a16c76297",
         "83046292-86ce-4b05-872d-583cb2626119",
-        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1"
+        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1",
+        "b429e79e-38e2-48b8-b987-9d07910e263b",
+        "8e438726-1fa3-4805-bf15-558cf06de336",
+        "db13e47c-57c3-4b34-bee7-48d3482ed85e"
       ],
       "settings": {
         "output_path": "output/"
@@ -755,6 +864,18 @@
       ],
       "settings": {
         "output_path": "output/"
+      },
+      "type": "folder"
+    },
+    {
+      "description": "Documentation",
+      "id": "90727d03-d70d-42a2-b825-0a458cce428b",
+      "only": [
+        "b429e79e-38e2-48b8-b987-9d07910e263b",
+        "8e438726-1fa3-4805-bf15-558cf06de336"
+      ],
+      "settings": {
+        "output_path": "img/"
       },
       "type": "folder"
     }

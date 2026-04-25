@@ -380,7 +380,20 @@ def main():
     print("Fetching categories...")
     all_cats = as_list(api_get("part/category/?limit=9999"))
     cats_by_pk = {c["pk"]: c for c in all_cats}
-    tree = build_category_tree(all_cats)
+
+    kicad_parts_cat = next((c for c in all_cats if c["name"] == "kicad-parts"), None)
+    if not kicad_parts_cat:
+        print("ERROR: 'kicad-parts' category not found.", file=sys.stderr)
+        sys.exit(1)
+    kicad_parts_pk = kicad_parts_cat["pk"]
+
+    def is_under_kicad_parts(cat):
+        """Return True if cat is a descendant of kicad-parts."""
+        pks = ancestor_pks(cat, cats_by_pk)
+        return kicad_parts_pk in pks and cat["pk"] != kicad_parts_pk
+
+    kicad_cats = [c for c in all_cats if is_under_kicad_parts(c)]
+    tree = build_category_tree(kicad_cats)
 
     selectable = []
     print("\nAvailable categories:")

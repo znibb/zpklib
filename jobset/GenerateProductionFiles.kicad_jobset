@@ -40,6 +40,7 @@
         "include_netlist_attributes": true,
         "layers": [
           "B.Cu",
+          "B.Mask",
           "B.Paste",
           "B.SilkS",
           "In30.Cu",
@@ -73,6 +74,7 @@
           "In2.Cu",
           "In1.Cu",
           "F.Cu",
+          "F.Mask",
           "F.Paste",
           "F.SilkS",
           "Edge.Cuts"
@@ -683,7 +685,7 @@
       "description": "Render Top",
       "id": "b429e79e-38e2-48b8-b987-9d07910e263b",
       "settings": {
-        "anti_alias": false,
+        "anti_alias": true,
         "bg_style": "opaque",
         "description": "",
         "floor": false,
@@ -736,7 +738,7 @@
       "description": "Render Bottom",
       "id": "8e438726-1fa3-4805-bf15-558cf06de336",
       "settings": {
-        "anti_alias": false,
+        "anti_alias": true,
         "bg_style": "opaque",
         "description": "",
         "floor": false,
@@ -835,10 +837,7 @@
       "only": [
         "412ba608-3fe6-4f45-915f-c90a16c76297",
         "83046292-86ce-4b05-872d-583cb2626119",
-        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1",
-        "b429e79e-38e2-48b8-b987-9d07910e263b",
-        "8e438726-1fa3-4805-bf15-558cf06de336",
-        "db13e47c-57c3-4b34-bee7-48d3482ed85e"
+        "c11f70dc-2db9-4f79-b3ba-d82363f1a0d1"
       ],
       "settings": {
         "output_path": "output/"

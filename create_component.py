@@ -126,8 +126,11 @@ def as_list(data):
 # Category helpers
 # ---------------------------------------------------------------------------
 
-def build_category_tree(categories):
-    """Return [(depth, category), ...] in display order (DFS by name)."""
+def build_category_tree(categories, root_pk=None):
+    """Return [(depth, category), ...] in display order (DFS by name).
+
+    root_pk: walk children of this pk as the top level (default: None = true roots).
+    """
     by_parent = {}
     for cat in categories:
         by_parent.setdefault(cat.get("parent"), []).append(cat)
@@ -139,7 +142,7 @@ def build_category_tree(categories):
             result.append((depth, cat))
             walk(cat["pk"], depth + 1)
 
-    walk(None, 0)
+    walk(root_pk, 0)
     return result
 
 
@@ -393,7 +396,7 @@ def main():
         return kicad_parts_pk in pks and cat["pk"] != kicad_parts_pk
 
     kicad_cats = [c for c in all_cats if is_under_kicad_parts(c)]
-    tree = build_category_tree(kicad_cats)
+    tree = build_category_tree(kicad_cats, root_pk=kicad_parts_pk)
 
     selectable = []
     print("\nAvailable categories:")

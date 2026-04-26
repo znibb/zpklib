@@ -2,12 +2,15 @@
 """
 Create an assembly part in InvenTree from a KiCad BOM CSV file.
 
-Reads a *_BOM_Generic.csv BOM file, looks up each component by IPN, creates a new
-assembly part under the electronic-assemblies category, and populates its
-Bill of Materials. DNP rows are excluded.
+Must be run from a KiCad project directory. Reads the BOM from
+output/PCBA/*_BOM_Generic.csv, looks up each component by IPN, creates or
+updates an assembly part under the electronic-assemblies category, and
+populates its Bill of Materials. DNP rows are excluded.
+
+If img/PCB_Render_Top.png exists it is uploaded as the part image.
 
 Usage:
-  create_assembly.py <bom_csv>
+  create_assembly.py
 
 Connection details are read automatically from zpklib.kicad_httplib.
 """
@@ -51,6 +54,14 @@ def api_post(path, data):
     return r.json()
 
 
+def api_patch(path, data):
+    r = requests.patch(f"{BASE_URL}/{path}", headers=HEADERS, json=data)
+    if not r.ok:
+        print(f"ERROR {r.status_code}: {r.text}", file=sys.stderr)
+        r.raise_for_status()
+    return r.json()
+
+
 def as_list(data):
     return data if isinstance(data, list) else data.get("results", [])
 
@@ -79,12 +90,24 @@ def find_assembly_by_name(name, category_pk):
     return None
 
 
-def api_patch(path, data):
-    r = requests.patch(f"{BASE_URL}/{path}", headers=HEADERS, json=data)
-    if not r.ok:
-        print(f"ERROR {r.status_code}: {r.text}", file=sys.stderr)
-        r.raise_for_status()
-    return r.json()
+def find_part_by_ipn(ipn):
+    parts = as_list(api_get(f"part/?IPN={ipn}&limit=10"))
+    for part in parts:
+        if part.get("IPN") == ipn:
+            return part
+    return None
+
+
+def next_assembly_ipn():
+    """Return the next available EA-NNNNN IPN."""
+    pattern = re.compile(r"^EA-(\d{5})$")
+    parts = as_list(api_get("part/?limit=9999"))
+    max_serial = 0
+    for part in parts:
+        m = pattern.match(part.get("IPN") or "")
+        if m:
+            max_serial = max(max_serial, int(m.group(1)))
+    return f"EA-{max_serial + 1:05d}"
 
 
 def sync_bom_items(assembly_pk, new_rows):
@@ -127,37 +150,68 @@ def sync_bom_items(assembly_pk, new_rows):
     return len(to_add), len(to_remove), len(to_update)
 
 
-def find_part_by_ipn(ipn):
-    parts = as_list(api_get(f"part/?IPN={ipn}&limit=10"))
-    for part in parts:
-        if part.get("IPN") == ipn:
-            return part
-    return None
-
-
-def next_assembly_ipn():
-    """Return the next available EA-NNNNN IPN."""
-    pattern = re.compile(r"^EA-(\d{5})$")
-    parts = as_list(api_get("part/?limit=9999"))
-    max_serial = 0
-    for part in parts:
-        m = pattern.match(part.get("IPN") or "")
-        if m:
-            max_serial = max(max_serial, int(m.group(1)))
-    return f"EA-{max_serial + 1:05d}"
+def upload_part_image(assembly_pk, image_path, filename):
+    """Upload image_path as the part image via PATCH /api/part/<pk>/."""
+    with open(image_path, "rb") as f:
+        image_bytes = f.read()
+    r = requests.patch(
+        f"{BASE_URL}/part/{assembly_pk}/",
+        headers=AUTH_HEADERS,  # no Content-Type — requests sets multipart boundary
+        files={"image": (filename, image_bytes, "image/png")},
+    )
+    if not r.ok:
+        print(f"ERROR uploading image {r.status_code}: {r.text}", file=sys.stderr)
+        r.raise_for_status()
 
 
 def main():
     global BASE_URL, AUTH_HEADERS, HEADERS
 
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <bom_csv>", file=sys.stderr)
+    if len(sys.argv) != 1:
+        print(f"Usage: {sys.argv[0]}", file=sys.stderr)
         sys.exit(1)
 
-    bom_path = Path(sys.argv[1])
-    if not bom_path.exists():
-        print(f"File not found: {bom_path}", file=sys.stderr)
+    # ------------------------------------------------------------------
+    # Verify we are in a KiCad project directory
+    # ------------------------------------------------------------------
+    cwd = Path.cwd()
+    kicad_pro_files = list(cwd.glob("*.kicad_pro"))
+    if not kicad_pro_files:
+        print(
+            "ERROR: No .kicad_pro file found in the current directory.\n"
+            "\n"
+            "This script must be run from a KiCad project directory.\n"
+            "It will look for the BOM in output/PCBA/ and optionally upload\n"
+            "img/PCB_Render_Top.png as the part image.",
+            file=sys.stderr,
+        )
         sys.exit(1)
+
+    # ------------------------------------------------------------------
+    # Find BOM file
+    # ------------------------------------------------------------------
+    pcba_dir = cwd / "output" / "PCBA"
+    bom_files = list(pcba_dir.glob("*_BOM_Generic.csv"))
+    if not bom_files:
+        print(f"ERROR: No *_BOM_Generic.csv found in {pcba_dir}", file=sys.stderr)
+        sys.exit(1)
+    if len(bom_files) > 1:
+        print(f"ERROR: Multiple BOM files found in {pcba_dir}:", file=sys.stderr)
+        for f in bom_files:
+            print(f"  {f.name}", file=sys.stderr)
+        sys.exit(1)
+    bom_path = bom_files[0]
+    print(f"BOM: {bom_path}")
+
+    # ------------------------------------------------------------------
+    # Check for render image
+    # ------------------------------------------------------------------
+    render_path = cwd / "img" / "PCB_Render_Top.png"
+    if render_path.exists():
+        print(f"Image: {render_path}")
+    else:
+        print(f"Image: not found ({render_path}) — skipping")
+        render_path = None
 
     base, token = _read_httplib(HTTPLIB_FILE)
     BASE_URL = f"{base}/api"
@@ -169,7 +223,7 @@ def main():
     # ------------------------------------------------------------------
     df = pd.read_csv(bom_path, sep=",", skipinitialspace=True)
     df_populated = df[df["DNP"].isna() | (df["DNP"] == "")]
-    print(f"BOM: {len(df_populated)} populated rows ({len(df) - len(df_populated)} DNP excluded)")
+    print(f"{len(df_populated)} populated rows ({len(df) - len(df_populated)} DNP excluded)")
 
     # ------------------------------------------------------------------
     # Collect assembly metadata
@@ -209,9 +263,9 @@ def main():
         new_ver = parse_semver(revision)
 
         if current_ver is None:
-            print(f"  Warning: current revision '{current_revision}' is not a valid semver — skipping version check.")
+            print(f"  Warning: current revision '{current_revision}' is not valid semver — skipping version check.")
         elif new_ver is None:
-            print(f"ERROR: new revision '{revision}' is not a valid semver (expected vMAJOR.MINOR.PATCH).", file=sys.stderr)
+            print(f"ERROR: new revision '{revision}' is not valid semver (expected vMAJOR.MINOR.PATCH).", file=sys.stderr)
             sys.exit(1)
         elif new_ver < current_ver:
             print(f"ERROR: cannot downgrade from {current_revision} to {revision}.", file=sys.stderr)
@@ -261,6 +315,7 @@ def main():
     print(f"  Description: {description}")
     print(f"  Category:    {category['name']} (pk={category['pk']})")
     print(f"  BOM items:   {len(rows)}")
+    print(f"  Image:       {render_path.name if render_path else '(none)'}")
     print()
     action = "Update" if existing else "Create"
     confirm = input(f"{action} assembly? [y/N]: ").strip().lower()
@@ -311,6 +366,15 @@ def main():
                 "reference": row["refs"],
             })
             print(f"  Added {row['ipn']}  x{row['qty']}  ({row['refs']})")
+
+    # ------------------------------------------------------------------
+    # Upload part image
+    # ------------------------------------------------------------------
+    if render_path:
+        print(f"\nUploading part image...")
+        image_filename = f"{name}_{revision}.png"
+        upload_part_image(assembly_pk, render_path, image_filename)
+        print(f"  Uploaded as {image_filename}")
 
     web_base = BASE_URL.removesuffix("/api")
     action_past = "updated" if existing else "created"

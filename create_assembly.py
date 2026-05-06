@@ -2,15 +2,16 @@
 """
 Create an assembly part in InvenTree from a KiCad BOM CSV file.
 
-Must be run from a KiCad project directory. Reads the BOM from
-output/PCBA/*_BOM_Generic.csv, looks up each component by IPN, creates or
-updates an assembly part under the electronic-assemblies category, and
-populates its Bill of Materials. DNP rows are excluded.
+Reads the BOM from output/PCBA/*_BOM_Generic.csv, looks up each component by
+IPN, creates or updates an assembly part under the electronic-assemblies
+category, and populates its Bill of Materials. DNP rows are excluded.
 
 If img/PCB_Render_Top.png exists it is uploaded as the part image.
 
 Usage:
-  create_assembly.py
+  create_assembly.py [PROJECT_DIR]
+
+PROJECT_DIR defaults to the current working directory if omitted.
 
 Connection details are read automatically from zpklib.kicad_httplib.
 """
@@ -167,14 +168,14 @@ def upload_part_image(assembly_pk, image_path, filename):
 def main():
     global BASE_URL, AUTH_HEADERS, HEADERS
 
-    if len(sys.argv) != 1:
-        print(f"Usage: {sys.argv[0]}", file=sys.stderr)
+    if len(sys.argv) > 2:
+        print(f"Usage: {sys.argv[0]} [PROJECT_DIR]", file=sys.stderr)
         sys.exit(1)
 
     # ------------------------------------------------------------------
     # Verify we are in a KiCad project directory
     # ------------------------------------------------------------------
-    cwd = Path.cwd()
+    cwd = Path(sys.argv[1]).resolve() if len(sys.argv) == 2 else Path.cwd()
     kicad_pro_files = list(cwd.glob("*.kicad_pro"))
     if not kicad_pro_files:
         print(

@@ -13,7 +13,7 @@ Inventree python plugin: ../inventree_python
 Kicad: ../kicad-source-mirror
 Kicad plugin: ../inventree_kicad
 
-## Docker / database
+## Docker / database (local development)
 
 - Container names: `inventree-server`, `inventree-worker`, `inventree-db`, `inventree-cache`, `inventree-proxy`
 - DB credentials: user=`inventree`, db=`inventree` (see `dev/.env`)
@@ -27,7 +27,7 @@ Kicad plugin: ../inventree_kicad
   docker restart inventree-server inventree-worker
   ```
 
-## InvenTree API
+## InvenTree API (local development)
 
 Base URL: `http://localhost:8000/api/`
 Auth header: `Authorization: Token <token>`

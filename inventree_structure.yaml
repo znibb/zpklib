@@ -329,6 +329,10 @@ parameter_templates:
     description: Current rating
     unit: A
 
+  - name: CurrentPeakPulse
+    description: Peak pulse current
+    unit: A
+
   - name: CurrentReverseLeakage
     description: Reverse leakage current
     unit: A
@@ -652,6 +656,14 @@ parameter_templates:
   - name: ValueStandard # top-level
     description: Component value, decimal notation
 
+  - name: VoltageBreakdown
+    description: Min breakdown voltage
+    unit: V
+
+  - name: VoltageClamping
+    description: Max clamping voltage
+    unit: V
+
   - name: VoltageDrainSource
     description: Drain to Source voltage
     unit: V
@@ -682,6 +694,10 @@ parameter_templates:
 
   - name: VoltageReverse
     description: Max reverse voltage
+    unit: V
+
+  - name: VoltageStandoff
+    description: Reverse standoff voltage
     unit: V
 
 # subcategories
@@ -825,6 +841,22 @@ subcategories:
       - Symbol_Diode
       - VoltageForward
       - VoltageReverse
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: D
+      footprint_param: Package_Diode
+
+  - name: DiodeZener
+    description: Diode, zener
+    icon: ti:circuit-diode:outline
+    params:
+      - CurrentPeakPulse
+      - Package_Diode
+      - Symbol
+      - Symbol_Diode
+      - VoltageBreakdown
+      - VoltageClamping
+      - VoltageStandoff
     kicad:
       default_symbol: placeholder:BlankSymbol
       default_reference: D

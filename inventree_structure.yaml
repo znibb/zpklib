@@ -185,6 +185,11 @@ package_selection_lists:
     pretty_dirs:
       - package_TO_SOT.pretty
 
+  - name: Packages_RegulatorLinear
+    description: Linear regulator packages
+    pretty_dirs:
+      - package_TO_SOT.pretty
+
   - name: Packages_RegulatorSwitching
     description: Switching regulator packages
     pretty_dirs:
@@ -278,6 +283,10 @@ symbol_selection_lists:
   - name: Symbols_PowerProtection
     description: Power protection symbols
     symbol_file: power_protection.kicad_sym
+
+  - name: Symbols_RegulatorLinear
+    description: Linear regulator symbols
+    symbol_file: regulator_linear.kicad_sym
 
   - name: Symbols_RegulatorSwitching
     description: Switching regulator symbols
@@ -504,6 +513,10 @@ parameter_templates:
     description: Power protection device package
     selectionlist: Packages_PowerProtection
 
+  - name: Package_RegulatorLinear
+    description: Linear regulator package
+    selectionlist: Packages_RegulatorLinear
+
   - name: Package_RegulatorSwitching
     description: Switching regulator package
     selectionlist: Packages_RegulatorSwitching
@@ -626,6 +639,10 @@ parameter_templates:
   - name: Symbol_PowerProtection
     description: Power protection symbol
     selectionlist: Symbols_PowerProtection
+
+  - name: Symbol_RegulatorLinear
+    description: Linear regulator symbol
+    selectionlist: Symbols_RegulatorLinear
 
   - name: Symbol_RegulatorSwitching
     description: Switching regulator symbol
@@ -1027,6 +1044,20 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_PowerProtection
+
+  - name: RegulatorLinear
+    description: Linear regulators
+    icon: ti:cpu:outline
+    params:
+      - Channels
+      - CurrentOutput
+      - Package_RegulatorLinear
+      - Symbol
+      - Symbol_RegulatorLinear
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_RegulatorLinear
 
   - name: RegulatorSwitching
     description: Switching regulators

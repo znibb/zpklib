@@ -155,6 +155,11 @@ package_selection_lists:
     pretty_dirs:
       - package_QFP.pretty
 
+  - name: Packages_InterfaceShiftRegister
+    description: Shift register packages
+    pretty_dirs:
+      - package_SO.pretty
+
   - name: Packages_Isolator
     description: Isolator packages
     pretty_dirs:
@@ -264,6 +269,10 @@ symbol_selection_lists:
   - name: Symbols_InterfaceEthernet
     description: Ethernet symbols
     symbol_file: interface_ethernet.kicad_sym
+
+  - name: Symbols_InterfaceShiftRegister
+    description: Shift register symbols
+    symbol_file: interface_shiftregister.kicad_sym
 
   - name: Symbols_Isolator
     description: Isolator symbols
@@ -494,6 +503,10 @@ parameter_templates:
     description: Ethernet package
     selectionlist: Packages_InterfaceEthernet
 
+  - name: Package_InterfaceShiftRegister
+    description: Shift register package
+    selectionlist: Packages_InterfaceShiftRegister
+
   - name: Package_Isolator
     description: Isolator package
     selectionlist: Packages_Isolator
@@ -620,6 +633,10 @@ parameter_templates:
   - name: Symbol_InterfaceEthernet
     description: Ethernet symbol
     selectionlist: Symbols_InterfaceEthernet
+  
+  - name: Symbol_InterfaceShiftRegister
+    description: Shift register symbol
+    selectionlist: Symbols_InterfaceShiftRegister
 
   - name: Symbol_Isolator
     description: Isolator symbol
@@ -961,6 +978,18 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_InterfaceEthernet
+
+  - name: InterfaceShiftRegister
+    description: Shift register ICs
+    icon: ti:cpu:outline
+    params:
+      - Package_InterfaceShiftRegister
+      - Symbol
+      - Symbol_InterfaceShiftRegister
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_InterfaceShiftRegister
 
   - name: Isolator
     description: Isolator, optocoupler

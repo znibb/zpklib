@@ -170,6 +170,11 @@ package_selection_lists:
     pretty_dirs:
       - package_QFP.pretty
 
+  - name: Packages_PowerManagement
+    description: PMIC packages
+    pretty_dirs:
+      - package_TO_SOT.pretty
+
   - name: Packages_PowerModule
     description: Power module packages
     pretty_dirs:
@@ -261,6 +266,10 @@ symbol_selection_lists:
   - name: Symbols_Microcontroller-ST
     description: ST microcontroller symbols
     symbol_file: microcontroller_st.kicad_sym
+
+  - name: Symbols_PowerManagement
+    description: PMIC symbols
+    symbol_file: power_management.kicad_sym
 
   - name: Symbols_PowerModule
     description: Power module symbols
@@ -483,6 +492,10 @@ parameter_templates:
     description: Microcontroller package
     selectionlist: Packages_Microcontroller
 
+  - name: Package_PowerManagement
+    description: PMIC package
+    selectionlist: Packages_PowerManagement
+
   - name: Package_PowerModule
     description: Power module package
     selectionlist: Packages_PowerModule
@@ -601,6 +614,10 @@ parameter_templates:
   - name: Symbol_Microcontroller-ST
     description: ST microcontroller symbol
     selectionlist: Symbols_Microcontroller-ST
+
+  - name: Symbol_PowerManagement
+    description: PMIC symbol
+    selectionlist: Symbols_PowerManagement
 
   - name: Symbol_PowerModule
     description: Power module symbol
@@ -969,6 +986,17 @@ subcategories:
       footprint_param: Package_Microcontroller
       hide_fields: Value
 
+  - name: PowerManagement
+    description: Power Managemet (PMIC)
+    icon: ti:device-imac-bolt:outline
+    params:
+      - Package_PowerManagement
+      - Symbol
+      - Symbol_PowerManagement
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_PowerManagement
 
   - name: PowerModule
     description: Power modules

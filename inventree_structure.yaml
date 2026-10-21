@@ -51,7 +51,7 @@ selection_lists:
 
   - name: MCU_SizeCores
     description: MCU core sizes
-    entries: [32-bit]
+    entries: [8-bit, 32-bit]
 
   - name: MountingTypes
     description: Surface Mount / Through Hole
@@ -168,6 +168,7 @@ package_selection_lists:
   - name: Packages_Microcontroller
     description: Microcontroller packages
     pretty_dirs:
+      - package_SO.pretty
       - package_QFP.pretty
 
   - name: Packages_PowerManagement
@@ -267,6 +268,10 @@ symbol_selection_lists:
   - name: Symbols_Isolator
     description: Isolator symbols
     symbol_file: isolator.kicad_sym
+
+  - name: Symbols_Microcontroller-Atmel
+    description: Atmel microcontroller symbols
+    symbol_file: microcontroller_atmel.kicad_sym
 
   - name: Symbols_Microcontroller-ST
     description: ST microcontroller symbols
@@ -623,6 +628,10 @@ parameter_templates:
   - name: Symbol_LED
     description: LED symbol
     selectionlist: Symbols_LED
+
+  - name: Symbol_Microcontroller-Atmel
+    description: Atmel microcontroller symbol
+    selectionlist: Symbols_Microcontroller-Atmel
 
   - name: Symbol_Microcontroller-ST
     description: ST microcontroller symbol
@@ -985,6 +994,23 @@ subcategories:
       hide_fields: Value
       show_extra_fields: LED_Colour
 
+  - name: Microcontroller-Atmel
+    description: Atmel microcontrollers
+    icon: ti:cpu:outline
+    params:
+      - MCU_NbrIO
+      - MCU_SizeCore
+      - MCU_SizeFlash
+      - MCU_SizeRAM
+      - MCU_Speed
+      - Package_Microcontroller
+      - Symbol
+      - Symbol_Microcontroller-Atmel
+    kicad:
+      default_symbol: placeholder:BlankSymbol
+      default_reference: U
+      footprint_param: Package_Microcontroller
+
   - name: Microcontroller-ST
     description: ST microcontrollers
     icon: ti:cpu:outline
@@ -1001,7 +1027,6 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: U
       footprint_param: Package_Microcontroller
-      hide_fields: Value
 
   - name: PowerManagement
     description: Power Managemet (PMIC)

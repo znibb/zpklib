@@ -29,10 +29,6 @@ selection_lists:
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
 
-  - name: FET_Types
-    description: FET types
-    entries: [N-channel, P-channel]
-
   - name: FuseCases
     description: Fuse cases
     entries: [5x20mm]
@@ -84,6 +80,10 @@ selection_lists:
   - name: SwitchingRegulatorFunctions
     description: Switching regulator functions
     entries: [Step-up, Step-down]
+
+  - name: TransistorTypes
+    description: Transistor types
+    entries: [N-channel (FET), P-channel (FET), NPN (NJT), PNP (BJT), NPN Darlington (BJT), PNP Darlington (BJT)]
 
 # Package selection lists are derived from footprint directories at runtime.
 # Each entry specifies the list name, description, and one or more footprint pretty directories.
@@ -231,6 +231,11 @@ package_selection_lists:
     pretty_dirs:
       - package_TO_SOT.pretty
 
+  - name: Packages_TransistorArray
+    description: Transistor array packages
+    pretty_dirs:
+      - package_SO.pretty
+
 # Symbol selection lists are derived from .kicad_sym files at runtime.
 # Each entry specifies the list name, description, and the symbol file path (relative to repo root).
 symbol_selection_lists:
@@ -322,6 +327,10 @@ symbol_selection_lists:
     description: Transistor symbols
     symbol_file: transistor.kicad_sym
 
+  - name: Symbols_TransistorArray
+    description: Transistor array symbols
+    symbol_file: transistor_array.kicad_sym
+
 # Parameter templates.
 # unit: omit or leave empty for dimensionless
 # checkbox: omit to default to false
@@ -388,10 +397,6 @@ parameter_templates:
   - name: EquivalentSeriesResistance
     description: Equivalent series resistance (ESR)
     unit: Ω
-
-  - name: FET_Type
-    description: FET Type
-    selectionlist: FET_Types
 
   - name: Frequency
     description: Frequency
@@ -563,6 +568,10 @@ parameter_templates:
     description: Transistor package
     selectionlist: Packages_Transistor
 
+  - name: Package_TransistorArray
+    description: Transistor array package
+    selectionlist: Packages_TransistorArray
+
   - name: Power
     description: Power rating
     unit: W
@@ -689,6 +698,10 @@ parameter_templates:
   - name: Symbol_Transistor
     description: Transistor symbol
     selectionlist: Symbols_Transistor
+  
+  - name: Symbol_TransistorArray
+    description: Transistor array symbol
+    selectionlist: Symbols_TransistorArray
 
   - name: SensorType
     description: Sensor type
@@ -710,6 +723,10 @@ parameter_templates:
     description: Value tolerance
     unit: "%"
 
+  - name: TransistorType
+    description: Transistor type
+    selectionlist: TransistorTypes
+
   - name: ValueAlternate # top-level
     description: Component value, compact notation
 
@@ -724,8 +741,12 @@ parameter_templates:
     description: Max clamping voltage
     unit: V
 
+  - name: VoltageCollectorEmitter
+    description: Max Collector to Emitter voltage (BJT)
+    unit: V
+
   - name: VoltageDrainSource
-    description: Drain to Source voltage
+    description: Max Drain to Source voltage (FET)
     unit: V
 
   - name: VoltageForward
@@ -733,11 +754,11 @@ parameter_templates:
     unit: V
 
   - name: VoltageGateSource
-    description: Gate to Source (max)
+    description: Max Gate to Source voltage (FET)
     unit: V
 
   - name: VoltageGateSourceThreshold
-    description: Gate to Source threshold (max)
+    description: Max Gate to Source threshold voltage (FET)
     unit: V
 
   - name: VoltageIsolation
@@ -1200,13 +1221,14 @@ subcategories:
 
   - name: Transistor
     description: Transistors
-    icon: 
+    icon: ti:circuit-switch-open:outline
     params:
       - CurrentRating
-      - FET_Type
       - Package_Transistor
       - Symbol
       - Symbol_Transistor
+      - TransistorType
+      - VoltageCollectorEmitter
       - VoltageDrainSource
       - VoltageGateSource
       - VoltageGateSourceThreshold
@@ -1214,3 +1236,17 @@ subcategories:
       default_symbol: placeholder:BlankSymbol
       default_reference: Q
       footprint_param: Package_Transistor
+
+  - name: TransistorArray
+    description: Transistor arrays
+    icon: ti:circuit-switch-open:outline
+    params:
+      - CurrentRating
+      - Package_TransistorArray
+      - Symbol
+      - Symbol_TransistorArray
+      - TransistorType
+      - VoltageCollectorEmitter
+      - VoltageDrainSource
+      - VoltageGateSource
+      - VoltageGateSourceThreshold

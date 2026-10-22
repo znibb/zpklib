@@ -69,17 +69,6 @@
 				)
 			)
 		)
-		(property "Sim.Pins" "1=K 2=A"
-			(at 0 15.24 0)
-			(show_name no)
-			(do_not_autoplace no)
-			(hide yes)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
 		(property "LED_Colour" "Colour"
 			(at 0 -2.54 0)
 			(show_name no)
@@ -196,14 +185,14 @@
 			(pin passive line
 				(at 3.81 0 180)
 				(length 2.54)
-				(name "K"
+				(name "C"
 					(effects
 						(font
 							(size 1.27 1.27)
 						)
 					)
 				)
-				(number "K"
+				(number "C"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -721,14 +710,14 @@
 			(pin passive line
 				(at 7.62 -3.81 180)
 				(length 1.905)
-				(name "RK"
+				(name "RC"
 					(effects
 						(font
 							(size 1.27 1.27)
 						)
 					)
 				)
-				(number "K1"
+				(number "C1"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -739,14 +728,14 @@
 			(pin passive line
 				(at 7.62 -8.89 180)
 				(length 1.905)
-				(name "YK"
+				(name "YC"
 					(effects
 						(font
 							(size 1.27 1.27)
 						)
 					)
 				)
-				(number "K2"
+				(number "C2"
 					(effects
 						(font
 							(size 1.27 1.27)
@@ -757,14 +746,14 @@
 			(pin passive line
 				(at 7.62 -13.97 180)
 				(length 1.905)
-				(name "GK"
+				(name "GC"
 					(effects
 						(font
 							(size 1.27 1.27)
 						)
 					)
 				)
-				(number "K3"
+				(number "C3"
 					(effects
 						(font
 							(size 1.27 1.27)

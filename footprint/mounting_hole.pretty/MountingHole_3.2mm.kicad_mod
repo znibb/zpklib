@@ -1,4 +1,4 @@
-(footprint "MountingHole_3.5mm"
+(footprint "MountingHole_3.2mm"
 	(version 20260206)
 	(generator "pcbnew")
 	(generator_version "10.0")
@@ -8,7 +8,7 @@
 	(property "Reference" "REF**"
 		(at 0 -4.45 0)
 		(layer "F.SilkS")
-		(uuid "2fd333fd-2971-4963-8310-f70553a2321f")
+		(uuid "d5f11d24-6af6-4e3f-92b3-65271b442169")
 		(effects
 			(font
 				(size 1 1)
@@ -16,11 +16,11 @@
 			)
 		)
 	)
-	(property "Value" "MountingHole_3.5mm"
+	(property "Value" "MountingHole_3.2mm"
 		(at 0 4.45 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "ff384e88-b339-4f28-a7ff-a895c83534d4")
+		(uuid "c9f1bb17-3b7d-4cb1-a094-b791071b16af")
 		(effects
 			(font
 				(size 1 1)
@@ -32,7 +32,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "76420a4d-14ec-4d5b-a4dd-2a22694b0941")
+		(uuid "8d975213-5cd4-4a21-91a5-baead0b43163")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -43,7 +43,7 @@
 		(at 0 0 0)
 		(layer "F.Fab")
 		(hide yes)
-		(uuid "4f2000b2-f7d8-4109-b7a2-7d677d75c112")
+		(uuid "f4c13638-3a34-4a4b-a0df-3c6e07d722d9")
 		(effects
 			(font
 				(size 1.27 1.27)
@@ -54,7 +54,7 @@
 		(at 0 0 0)
 		(layer "F.SilkS")
 		(hide yes)
-		(uuid "563e45cf-e53b-4e90-811e-3b4b4da89de9")
+		(uuid "dd013df2-e9ea-4d5d-821c-0de91eb1cc9b")
 		(effects
 			(font
 				(size 1 1)
@@ -73,7 +73,7 @@
 		)
 		(fill no)
 		(layer "Cmts.User")
-		(uuid "8aaa2a88-7d85-46c9-bee0-6d0a9de52375")
+		(uuid "f8c216c4-2b81-4c09-aeb8-5ec02894b806")
 	)
 	(fp_circle
 		(center 0 0)
@@ -84,12 +84,12 @@
 		)
 		(fill no)
 		(layer "F.CrtYd")
-		(uuid "9b3d372f-a668-43eb-90d8-277cee47f11e")
+		(uuid "68275b18-42f9-4273-9bc3-b82f6fb0540e")
 	)
 	(fp_text user "${REFERENCE}"
 		(at 0 0 0)
 		(layer "F.Fab")
-		(uuid "baa6730a-506e-4054-943f-00ed1a3572af")
+		(uuid "90f93a29-4c38-46fb-9a34-417ebedd0b88")
 		(effects
 			(font
 				(size 1 1)
@@ -99,10 +99,10 @@
 	)
 	(pad "" np_thru_hole circle
 		(at 0 0)
-		(size 3.5 3.5)
-		(drill 3.5)
+		(size 3.2 3.2)
+		(drill 3.2)
 		(layers "*.Cu" "*.Mask")
-		(uuid "2c3a3fda-fd93-4090-b4d0-f2e878847abd")
+		(uuid "ab41de77-7bfb-4ee4-b569-20f005ec807b")
 	)
 	(embedded_fonts no)
 )

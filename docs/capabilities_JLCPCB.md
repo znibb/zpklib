@@ -1,7 +1,7 @@
 ## Capabilities JLCPCB
 ### References
-https://jlcpcb.com/capabilities/pcb-capabilities
-https://jlcpcb.com/impedance
+* https://jlcpcb.com/capabilities/pcb-capabilities  
+* https://jlcpcb.com/impedance
 
 
 ### Standard stackups
@@ -178,7 +178,7 @@ https://jlcpcb.com/impedance
 | Inner layer hole to copper clearance | 0.20 mm | |
 | Inner layer PTH pad hole to copper clearance | 0.30 mm | |
 | SMD pad to pad clearance | 0.15 mm | Different nets |
-| VIa hole to track | 0.20 mm | |
+| Via hole to track | 0.20 mm | |
 | PTH to track | 0.28 mm | 0.35 mm recommended |
 | NPTH to track | 0.2 mm | |
 

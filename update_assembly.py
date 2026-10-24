@@ -1,15 +1,24 @@
 #!/usr/bin/env python3
 """
-Create an assembly part in InvenTree from a KiCad BOM CSV file.
+Upload assembly information from a KiCad project to an existing InvenTree
+assembly part.
+
+The assembly IPN is read from the PART_NUMBER text variable in the project's
+.kicad_pro file. The IPN must already exist in InvenTree; reserve one with
+next_assembly_ipn.py first.
+
+The VERSION text variable sets the part's revision (as vX.Y.Z) and the
+RELEASE_DATE text variable (YYYY-MM-DD) is added or updated as the part's
+RELEASE_DATE parameter. The parameter template is created if it doesn't exist.
 
 Reads the BOM from output/PCBA/*_BOM_Generic.csv, looks up each component by
-IPN, creates or updates an assembly part under the electronic-assemblies
-category, and populates its Bill of Materials. DNP rows are excluded.
+IPN, updates the assembly's name, revision and description, and syncs its Bill
+of Materials. DNP rows are excluded.
 
 If img/PCB_Render_Top.png exists it is uploaded as the part image.
 
 Usage:
-  create_assembly.py [PROJECT_DIR]
+  update_assembly.py [PROJECT_DIR]
 
 PROJECT_DIR defaults to the current working directory if omitted.
 
@@ -21,10 +30,44 @@ import re
 import sys
 from pathlib import Path
 
-import pandas as pd
-import requests
-
 HTTPLIB_FILE = Path(__file__).parent / "zpklib.kicad_httplib"
+
+
+def check_venv():
+    """Warn if no virtual environment is active and ask whether to continue.
+
+    Runs before the third-party imports below, since those are the packages
+    that are missing when the venv isn't active.
+    """
+    if sys.prefix != sys.base_prefix:
+        return
+
+    activate = Path(__file__).resolve().parent / ".venv" / "bin" / "activate"
+    print("WARNING: No active Python virtual environment detected.", file=sys.stderr)
+    print("This script needs the packages in requirements.txt (pandas, requests).", file=sys.stderr)
+    print(f"Activate the venv first:  . {activate}", file=sys.stderr)
+    print("(or create it with ./setup-venv.sh)\n", file=sys.stderr)
+    try:
+        confirm = input("Continue anyway? [y/N]: ").strip().lower()
+    except EOFError:
+        confirm = ""
+    if confirm not in ("y", "yes"):
+        print("Aborted.")
+        sys.exit(1)
+
+
+check_venv()
+
+try:
+    import pandas as pd
+    import requests
+except ModuleNotFoundError as e:
+    print(
+        f"ERROR: Missing Python package '{e.name}'. "
+        "Activate the venv (or run ./setup-venv.sh) and try again.",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 
 def _read_httplib(path):
@@ -75,22 +118,6 @@ def parse_semver(revision):
     return (int(m.group(1)), int(m.group(2)), int(m.group(3)))
 
 
-def find_category(name):
-    cats = as_list(api_get("part/category/?limit=9999"))
-    for cat in cats:
-        if cat["name"] == name:
-            return cat
-    return None
-
-
-def find_assembly_by_name(name, category_pk):
-    parts = as_list(api_get(f"part/?category={category_pk}&assembly=true&limit=9999"))
-    for part in parts:
-        if part.get("name") == name:
-            return part
-    return None
-
-
 def find_part_by_ipn(ipn):
     parts = as_list(api_get(f"part/?IPN={ipn}&limit=10"))
     for part in parts:
@@ -99,16 +126,37 @@ def find_part_by_ipn(ipn):
     return None
 
 
-def next_assembly_ipn():
-    """Return the next available EA-NNNNN IPN."""
-    pattern = re.compile(r"^EA-(\d{5})$")
-    parts = as_list(api_get("part/?limit=9999"))
-    max_serial = 0
-    for part in parts:
-        m = pattern.match(part.get("IPN") or "")
-        if m:
-            max_serial = max(max_serial, int(m.group(1)))
-    return f"EA-{max_serial + 1:05d}"
+def read_text_variables(kicad_pro_path):
+    """Return the text_variables dict from a .kicad_pro file, or exit with an error."""
+    try:
+        with open(kicad_pro_path) as f:
+            project = json.load(f)
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"ERROR: Could not read {kicad_pro_path.name}: {e}", file=sys.stderr)
+        sys.exit(1)
+    return project.get("text_variables") or {}
+
+
+def read_part_number(kicad_pro_path, text_vars):
+    """Return the PART_NUMBER text variable, or exit with an error."""
+    part_number = text_vars.get("PART_NUMBER", "").strip()
+    if not part_number:
+        print(
+            f"ERROR: No PART_NUMBER text variable set in {kicad_pro_path.name}.\n"
+            "\n"
+            "Reserve an IPN with next_assembly_ipn.py, then set it as PART_NUMBER\n"
+            "in KiCad under Project Setup -> Text Variables.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if not re.match(r"^EA-\d{5}$", part_number):
+        print(
+            f"ERROR: PART_NUMBER '{part_number}' is not a valid assembly IPN "
+            "(expected EA-NNNNN).",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    return part_number
 
 
 def sync_bom_items(assembly_pk, new_rows):
@@ -151,6 +199,39 @@ def sync_bom_items(assembly_pk, new_rows):
     return len(to_add), len(to_remove), len(to_update)
 
 
+def get_or_create_template(name, description):
+    """Return the pk of the parameter template called name, creating it if missing."""
+    for tmpl in as_list(api_get("parameter/template/?limit=9999")):
+        if tmpl["name"] == name:
+            return tmpl["pk"]
+    tmpl = api_post("parameter/template/", {
+        "name": name,
+        "description": description,
+        "units": "",
+        "checkbox": False,
+    })
+    print(f"  Created parameter template '{name}' (pk={tmpl['pk']})")
+    return tmpl["pk"]
+
+
+def set_part_parameter(part_pk, template_pk, value):
+    """Add or update a part parameter. Returns "added", "updated" or "unchanged"."""
+    params = as_list(api_get(f"parameter/?model_type=part&model_id={part_pk}&limit=9999"))
+    for param in params:
+        if param["template"] == template_pk:
+            if param["data"] == value:
+                return "unchanged"
+            api_patch(f"parameter/{param['pk']}/", {"data": value})
+            return "updated"
+    api_post("parameter/", {
+        "model_type": "part",
+        "model_id": part_pk,
+        "template": template_pk,
+        "data": value,
+    })
+    return "added"
+
+
 def upload_part_image(assembly_pk, image_path, filename):
     """Upload image_path as the part image via PATCH /api/part/<pk>/."""
     with open(image_path, "rb") as f:
@@ -179,14 +260,41 @@ def main():
     kicad_pro_files = list(cwd.glob("*.kicad_pro"))
     if not kicad_pro_files:
         print(
-            "ERROR: No .kicad_pro file found in the current directory.\n"
+            f"ERROR: No .kicad_pro file found in {cwd}.\n"
             "\n"
-            "This script must be run from a KiCad project directory.\n"
-            "It will look for the BOM in output/PCBA/ and optionally upload\n"
-            "img/PCB_Render_Top.png as the part image.",
+            "Pass the KiCad project directory as an argument, or run this script\n"
+            "from it. It reads PART_NUMBER from the .kicad_pro file, looks for the\n"
+            "BOM in output/PCBA/ and optionally uploads img/PCB_Render_Top.png\n"
+            "as the part image.",
             file=sys.stderr,
         )
         sys.exit(1)
+    if len(kicad_pro_files) > 1:
+        print(f"ERROR: Multiple .kicad_pro files found in {cwd}:", file=sys.stderr)
+        for f in kicad_pro_files:
+            print(f"  {f.name}", file=sys.stderr)
+        sys.exit(1)
+
+    # ------------------------------------------------------------------
+    # Read the assembly IPN from the project
+    # ------------------------------------------------------------------
+    text_vars = read_text_variables(kicad_pro_files[0])
+    ipn = read_part_number(kicad_pro_files[0], text_vars)
+    print(f"PART_NUMBER: {ipn}")
+
+    version = text_vars.get("VERSION", "").strip()
+    release_date = text_vars.get("RELEASE_DATE", "").strip()
+    if version:
+        print(f"VERSION: {version}")
+    else:
+        print("VERSION: not set in the project — revision falls back to the BOM filename")
+    if not release_date:
+        print("RELEASE_DATE: not set in the project — skipping release date parameter")
+    elif not re.match(r"^\d{4}-\d{2}-\d{2}$", release_date):
+        print(f"RELEASE_DATE: '{release_date}' is not YYYY-MM-DD — skipping release date parameter")
+        release_date = ""
+    else:
+        print(f"RELEASE_DATE: {release_date}")
 
     # ------------------------------------------------------------------
     # Find BOM file
@@ -220,6 +328,27 @@ def main():
     HEADERS = {**AUTH_HEADERS, "Content-Type": "application/json"}
 
     # ------------------------------------------------------------------
+    # Find the assembly part
+    # ------------------------------------------------------------------
+    print(f"\nLooking up assembly {ipn}...")
+    existing = find_part_by_ipn(ipn)
+    if existing is None:
+        print(
+            f"ERROR: No part with IPN {ipn} found in InvenTree.\n"
+            "Reserve the IPN with next_assembly_ipn.py first.",
+            file=sys.stderr,
+        )
+        sys.exit(1)
+    if not existing.get("assembly"):
+        print(f"ERROR: Part {ipn} (pk={existing['pk']}) is not an assembly.", file=sys.stderr)
+        sys.exit(1)
+    assembly_pk = existing["pk"]
+    current_name = existing.get("name") or ""
+    current_revision = existing.get("revision") or ""
+    current_description = existing.get("description") or ""
+    print(f"  Found: pk={assembly_pk}, name={current_name}, revision={current_revision or '(none)'}")
+
+    # ------------------------------------------------------------------
     # Read BOM
     # ------------------------------------------------------------------
     df = pd.read_csv(bom_path, sep=",", skipinitialspace=True)
@@ -231,48 +360,27 @@ def main():
     # ------------------------------------------------------------------
     stem = bom_path.name.removesuffix("_BOM_Generic.csv")
     m = re.match(r"^(.+?)_(v\d+\.\d+\.\d+)$", stem)
-    default_name = m.group(1) if m else stem
-    default_revision = m.group(2) if m else ""
-
-    name = input(f"Assembly name [{default_name}]: ").strip() or default_name
-    revision = input(f"Revision [{default_revision}]: ").strip() or default_revision
-    description = input("Description: ").strip()
-    print("Resolving next IPN...")
-    suggested_ipn = next_assembly_ipn()
-    ipn = suggested_ipn  # may be overridden below if this is a new part
-
-    # ------------------------------------------------------------------
-    # Find category
-    # ------------------------------------------------------------------
-    print("\nLooking up 'electronic-assemblies' category...")
-    category = find_category("electronic-assemblies")
-    if not category:
-        print("ERROR: Category 'electronic-assemblies' not found.", file=sys.stderr)
-        sys.exit(1)
-    print(f"  Found: pk={category['pk']}")
-
-    # ------------------------------------------------------------------
-    # Check for existing assembly with the same name
-    # ------------------------------------------------------------------
-    existing = find_assembly_by_name(name, category["pk"])
-    if existing:
-        ipn = existing.get("IPN") or ipn
-        current_revision = existing.get("revision") or ""
-        print(f"\nFound existing assembly pk={existing['pk']} (IPN={ipn}, revision={current_revision or '(none)'})")
-
-        current_ver = parse_semver(current_revision)
-        new_ver = parse_semver(revision)
-
-        if current_ver is None:
-            print(f"  Warning: current revision '{current_revision}' is not valid semver — skipping version check.")
-        elif new_ver is None:
-            print(f"ERROR: new revision '{revision}' is not valid semver (expected vMAJOR.MINOR.PATCH).", file=sys.stderr)
-            sys.exit(1)
-        elif new_ver < current_ver:
-            print(f"ERROR: cannot downgrade from {current_revision} to {revision}.", file=sys.stderr)
-            sys.exit(1)
+    if version:
+        default_revision = version if version.startswith("v") else f"v{version}"
     else:
-        ipn = input(f"IPN [{suggested_ipn}]: ").strip() or suggested_ipn
+        default_revision = m.group(2) if m else ""
+
+    name = input(f"Assembly name [{current_name}]: ").strip() or current_name
+    revision = input(f"Revision [{default_revision}]: ").strip() or default_revision
+    description = input(f"Description [{current_description}]: ").strip() or current_description
+
+    current_ver = parse_semver(current_revision)
+    new_ver = parse_semver(revision)
+
+    if current_ver is None:
+        if current_revision:
+            print(f"  Warning: current revision '{current_revision}' is not valid semver — skipping version check.")
+    elif new_ver is None:
+        print(f"ERROR: new revision '{revision}' is not valid semver (expected vMAJOR.MINOR.PATCH).", file=sys.stderr)
+        sys.exit(1)
+    elif new_ver < current_ver:
+        print(f"ERROR: cannot downgrade from {current_revision} to {revision}.", file=sys.stderr)
+        sys.exit(1)
 
     # ------------------------------------------------------------------
     # Resolve component IPNs
@@ -305,82 +413,55 @@ def main():
     # ------------------------------------------------------------------
     # Confirm
     # ------------------------------------------------------------------
-    print(f"\n--- Summary ---")
-    if existing:
-        print(f"  Mode:        UPDATE (pk={existing['pk']}, current revision: {existing.get('revision') or '(none)'})")
-    else:
-        print(f"  Mode:        CREATE")
+    print("\n--- Summary ---")
+    print(f"  Assembly:    {ipn} (pk={assembly_pk}, current revision: {current_revision or '(none)'})")
     print(f"  Name:        {name}")
     print(f"  Revision:    {revision or '(none)'}")
-    print(f"  IPN:         {ipn}")
     print(f"  Description: {description}")
-    print(f"  Category:    {category['name']} (pk={category['pk']})")
+    print(f"  Release date: {release_date or '(none)'}")
     print(f"  BOM items:   {len(rows)}")
     print(f"  Image:       {render_path.name if render_path else '(none)'}")
     print()
-    action = "Update" if existing else "Create"
-    confirm = input(f"{action} assembly? [y/N]: ").strip().lower()
+    confirm = input("Update assembly? [y/N]: ").strip().lower()
     if confirm not in ("y", "yes"):
         print("Aborted.")
         sys.exit(0)
 
     # ------------------------------------------------------------------
-    # Create or update assembly part
+    # Update assembly part
     # ------------------------------------------------------------------
-    if existing:
-        assembly_pk = existing["pk"]
-        patch_data = {}
-        if description:
-            patch_data["description"] = description
-        if revision:
-            patch_data["revision"] = revision
-        if patch_data:
-            api_patch(f"part/{assembly_pk}/", patch_data)
-        print(f"\nUpdated assembly pk={assembly_pk}: {name}")
+    patch_data = {}
+    if name and name != current_name:
+        patch_data["name"] = name
+    if description and description != current_description:
+        patch_data["description"] = description
+    if revision and revision != current_revision:
+        patch_data["revision"] = revision
+    if patch_data:
+        api_patch(f"part/{assembly_pk}/", patch_data)
+    print(f"\nUpdated assembly pk={assembly_pk}: {name}")
 
-        print("\nSyncing BOM items...")
-        added, removed, updated = sync_bom_items(assembly_pk, rows)
-        print(f"  {added} added, {removed} removed, {updated} updated")
-    else:
-        part_data = {
-            "name": name,
-            "description": description,
-            "category": category["pk"],
-            "assembly": True,
-            "active": True,
-        }
-        if revision:
-            part_data["revision"] = revision
-        if ipn:
-            part_data["IPN"] = ipn
+    if release_date:
+        print("\nSetting release date parameter...")
+        template_pk = get_or_create_template("RELEASE_DATE", "Release date (YYYY-MM-DD)")
+        result = set_part_parameter(assembly_pk, template_pk, release_date)
+        print(f"  RELEASE_DATE {release_date}: {result}")
 
-        assembly = api_post("part/", part_data)
-        assembly_pk = assembly["pk"]
-        print(f"\nCreated assembly pk={assembly_pk}: {name}")
-
-        print("\nAdding BOM items...")
-        for row in rows:
-            api_post("bom/", {
-                "part": assembly_pk,
-                "sub_part": row["part_pk"],
-                "quantity": row["qty"],
-                "reference": row["refs"],
-            })
-            print(f"  Added {row['ipn']}  x{row['qty']}  ({row['refs']})")
+    print("\nSyncing BOM items...")
+    added, removed, updated = sync_bom_items(assembly_pk, rows)
+    print(f"  {added} added, {removed} removed, {updated} updated")
 
     # ------------------------------------------------------------------
     # Upload part image
     # ------------------------------------------------------------------
     if render_path:
-        print(f"\nUploading part image...")
+        print("\nUploading part image...")
         image_filename = f"{name}_{revision}.png"
         upload_part_image(assembly_pk, render_path, image_filename)
         print(f"  Uploaded as {image_filename}")
 
-    web_base = BASE_URL.removesuffix("/api")
-    action_past = "updated" if existing else "created"
-    print(f"\nDone. Assembly '{name}' {action_past} (pk={assembly_pk}).")
-    print(f"  URL: {web_base}/web/part/{assembly_pk}")
+    print(f"\nDone. Assembly '{name}' ({ipn}) updated (pk={assembly_pk}).")
+    print(f"  URL: {base}/web/part/{assembly_pk}")
 
 
 if __name__ == "__main__":

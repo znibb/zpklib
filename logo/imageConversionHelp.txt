@@ -1,0 +1,8 @@
+# Use 'convert ' command included in imagemagick package
+convert -transparent white -resize 250x250! Zkylark.svg Zkylark_logo_250x250px.png
+
+# Make background transparent
+-transparent white
+
+# Resize to x-by-y pixels (! to force break aspect ratio)
+-resize 250x250!

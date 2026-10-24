@@ -4,7 +4,7 @@
       "description": "Clear output directories",
       "id": "80041b16-9c68-44a8-868b-14db3ae45942",
       "settings": {
-        "command": "find output -maxdepth 1 -type f -delete && rm -rf output/PCB/* output/PCBA/*",
+        "command": "mkdir -p output && find output -maxdepth 1 -type f -delete && rm -rf output/PCB/* output/PCBA/*",
         "description": "",
         "ignore_exit_code": false,
         "output_filename": "80041b16-9c68-44a8-868b-14db3ae45942.log",
@@ -93,7 +93,8 @@
         "subtract_solder_mask_from_silk": false,
         "use_drill_origin": false,
         "use_protel_file_extension": false,
-        "use_x2_format": true
+        "use_x2_format": true,
+        "variant": ""
       },
       "type": "pcb_export_gerbers"
     },
@@ -454,7 +455,8 @@
         "sketch_dnp_footprints_on_fab_layers": true,
         "sketch_pads_on_fab_layers": false,
         "subtract_solder_mask_from_silk": false,
-        "use_drill_origin": false
+        "use_drill_origin": false,
+        "variant": ""
       },
       "type": "pcb_export_pdf"
     },
@@ -519,7 +521,8 @@
         "sketch_dnp_footprints_on_fab_layers": false,
         "sketch_pads_on_fab_layers": false,
         "subtract_solder_mask_from_silk": false,
-        "use_drill_origin": false
+        "use_drill_origin": false,
+        "variant": ""
       },
       "type": "pcb_export_pdf"
     },
@@ -529,6 +532,7 @@
       "settings": {
         "board_only": false,
         "board_outlines_chaining_epsilon": 0.01,
+        "component_filter": "",
         "cut_vias_in_body": false,
         "description": "",
         "export_board_body": true,
@@ -539,11 +543,14 @@
         "export_soldermask": false,
         "export_tracks": false,
         "export_zones": false,
+        "extra_pad_thickness": true,
         "fill_all_vias": false,
         "format": "step",
         "fuse_shapes": false,
+        "has_user_origin": false,
         "include_dnp": false,
         "include_unspecified": true,
+        "net_filter": "",
         "occt_format": 0,
         "optimize_step": true,
         "output_filename": "${PROJECTNAME}_v${VERSION}_3D-model.step",
@@ -555,8 +562,10 @@
         "use_pcb_center_origin": false,
         "user_origin.x": 0.0,
         "user_origin.y": 0.0,
+        "variant": "",
         "vrml_model_dir": "",
-        "vrml_relative_paths": false
+        "vrml_relative_paths": false,
+        "vrml_units": "m"
       },
       "type": "pcb_export_3d"
     },
@@ -579,7 +588,8 @@
         "plot_drawing_sheet": true,
         "show_hop_over": false,
         "use_background_color": true,
-        "variant_name": ""
+        "variant_name": "",
+        "variant_names": []
       },
       "type": "sch_export_plot_pdf"
     },
@@ -653,7 +663,8 @@
         "sketch_dnp_footprints_on_fab_layers": true,
         "sketch_pads_on_fab_layers": false,
         "subtract_solder_mask_from_silk": false,
-        "use_drill_origin": false
+        "use_drill_origin": false,
+        "variant": ""
       },
       "type": "pcb_export_pdf"
     },
@@ -729,6 +740,7 @@
         "rotation_z": 0.0,
         "side": "top",
         "use_board_stackup_colors": true,
+        "variant": "",
         "width": 1920,
         "zoom": 1.0
       },
@@ -782,6 +794,7 @@
         "rotation_z": 0.0,
         "side": "bottom",
         "use_board_stackup_colors": true,
+        "variant": "",
         "width": 1920,
         "zoom": 1.0
       },

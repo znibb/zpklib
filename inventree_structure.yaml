@@ -29,6 +29,10 @@ selection_lists:
     description: Connector genders
     entries: [Male, Female, Hermaphroditic]
 
+  - name: ContactTimings
+    description: Contact timings
+    entries: [Non-shorting (BBM), Shorting (MBB)]
+
   - name: FuseCases
     description: Fuse cases
     entries: [5x20mm]
@@ -72,6 +76,10 @@ selection_lists:
   - name: SensorTypes
     description: Sensor types
     entries: [Power monitoring]
+
+  - name: SwitchCircuits
+    description: Switch circuits
+    entries: [SPDT, DPDT]
 
   - name: SwitchFunctions
     description: Switch functions
@@ -361,6 +369,10 @@ parameter_templates:
   - name: ConnectorGender
     description: Connector gender
     selectionlist: ConnectorGenders
+
+  - name: ContactTiming
+    description: Contact timing
+    selectionlist: ContactTimings
 
   - name: CurrentOutput
     description: Current output (max)
@@ -710,6 +722,10 @@ parameter_templates:
   - name: Shielded
     description: Package shielding
     checkbox: true
+
+  - name: SwitchCircuit
+    description: Switch circuit
+    selectionlist: SwitchCircuits
 
   - name: TemperatureMax # top-level
     description: Temperature rating, max
@@ -1218,6 +1234,25 @@ subcategories:
       - VoltageRating
     kicad:
       default_symbol: switch:SW_Push
+      default_reference: SW
+      footprint_param: Package_Switch
+
+  - name: SwitchSlide
+    description: Slide switches
+    icon: ti:status-change:outline
+    params:
+      - ActuatorLength
+      - ActuatorOperatingForce
+      - ActuatorOrientation
+      - ContactTiming
+      - CurrentRating
+      - SwitchCircuit
+      - Symbol
+      - Symbol_Switch
+      - Package_Switch
+      - VoltageRating
+    kicad:
+      default_symbol: placeholder:BlankSymbol
       default_reference: SW
       footprint_param: Package_Switch
 

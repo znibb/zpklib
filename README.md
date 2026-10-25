@@ -93,8 +93,8 @@ to that category in `inventree_structure.yaml`.
 ## 4. KiCad layer specific usage
 | Layer | Usage |
 | :---- | :---- |
-| User.Drawings | Footprint-specific notes, connector protrusion etc. |
-| User.Comments | PCB/feature dimensions |
+| User.Drawings | PCB/feature dimensions |
+| User.Comments | Footprint-specific notes, connector protrusion etc. |
 | User.1 / PCB.Comments | PCB comments, stackup details, impedances etc. |
 
 ## 5. EMS Capabilities

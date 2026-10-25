@@ -49,10 +49,6 @@ this is deliberate, keep the scripts stand-alone. Run them inside the venv
 | `update_assembly.py PROJECT_DIR` | Uploads revision, release date, BOM and image of a KiCad project to its reserved assembly part |
 | `release_project.py PROJECT_DIR` | Git tag + GitHub release + file upload for a KiCad project |
 
-(The usage lines in the docstrings of `create_part.py` and
-`patch_inventree_structure.py` still show their old names `create_component.py`
-and `setup_inventree.py`.)
-
 ### patch_inventree_structure.py
 
 Five steps, each prints `N unchanged` plus the list of changes (with `would`
@@ -155,8 +151,7 @@ Text variables used by the templates, jobset and scripts (Project Setup, Text Va
 `Zkylark_DrawingSheet.kicad_wks` shows `${PROJECT_NAME}`, `${VERSION}`,
 `${RELEASE_DATE}`, `${PART_NUMBER}`, `${AUTHOR}`, `${EMAIL}` plus KiCad built-ins.
 Use `PROJECT_NAME`, not the built-in `PROJECTNAME` (which comes from the file name,
-e.g. `ThreeMan_HW`). The jobset's PCB Comments PDF still uses `${PROJECTNAME}`, so
-that one file is named `<ProjectFile>_vX.Y.Z_PCB-Comments.pdf`.
+e.g. `ThreeMan_HW`).
 
 The jobset (`GenerateProductionFiles.kicad_jobset`) clears `output/` (creating it if
 missing), sets up a project venv from `script/requirements.txt`, then exports gerbers,
@@ -214,8 +209,9 @@ Base URL (local Docker): `http://localhost:8000/api/`. Production uses the host 
 Auth header: `Authorization: Token <token>`
 Token is stored in `zpklib.kicad_httplib` (gitignored).
 
-The scripts read the URL and token from `zpklib.kicad_httplib`; to point them at the
-local instance, regenerate that file with `setup-inventree-httplib.sh`.
+The scripts read the URL and token from `zpklib.kicad_httplib`. To point them at the
+local instance, edit `root_url` in that file by hand (`setup-inventree-httplib.sh`
+always writes an `https://` URL).
 
 **HTTP client notes:**
 - Always send `Accept: application/json` on GET requests
@@ -294,6 +290,23 @@ POST /api/parameter/
   "data": "<value>"
 }
 ```
+
+**List a part's parameters / update one:**
+```
+GET   /api/parameter/?model_type=part&model_id=<part_id>&limit=9999
+PATCH /api/parameter/<parameter_pk>/   { "data": "<value>" }
+```
+Each item has `pk`, `template` (template pk) and `data`. `update_assembly.py` uses this to
+add or update `RELEASE_DATE`.
+
+### Attachments
+
+`GET /api/attachment/?model_type=part&limit=9999` lists attachment records (`pk`,
+`attachment` path, `filename`, `comment`, `model_id`); `DELETE /api/attachment/<pk>/`
+removes a record. Upload is multipart `POST /api/attachment/` with `model_type`,
+`model_id`, `comment` and an `attachment` file (`create_part.py` uses comment `datasheet`).
+Media URLs (`/media/...`) redirect to the Authentik login for token requests, so file
+existence cannot be checked remotely over HTTP.
 
 ### KiCad Plugin Category Mapping
 

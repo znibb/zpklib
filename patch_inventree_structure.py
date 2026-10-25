@@ -5,9 +5,9 @@ Idempotent: creates missing items and updates existing ones to match the
 structure defined in inventree_structure.yaml.
 
 Usage:
-  setup_inventree.py            Apply all changes.
-  setup_inventree.py --dry-run  Show what would change without modifying anything.
-  setup_inventree.py -d         Same as --dry-run.
+  patch_inventree_structure.py            Apply all changes.
+  patch_inventree_structure.py --dry-run  Show what would change without modifying anything.
+  patch_inventree_structure.py -d         Same as --dry-run.
 """
 
 import argparse

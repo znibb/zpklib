@@ -7,7 +7,7 @@ from parent categories), prompts for values respecting selection lists, then
 creates the part and sets all parameter values.
 
 Usage:
-  create_component.py
+  create_part.py
 
 Connection details are read automatically from zpklib.kicad_httplib.
 """

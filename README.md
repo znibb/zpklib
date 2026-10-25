@@ -55,11 +55,11 @@ your resistors will show up under a symbol library named `zpklib - kicad-parts/R
 ### 3.2. Bulk update Inventree
 1. Source the venv: `. .venv/bin/activate`
 1. Analyze the contents of `inventree_structure.yaml` 
-1. Applying the structure by running: `./inventree_structure_patch.py`  
+1. Applying the structure by running: `./patch_inventree_structure.py`  
 
 ### 3.3. Adding components to categories
 1. Source the venv: `. .venv/bin/activate`
-1. Run `./create_component.py`
+1. Run `./create_part.py`
 
 ### 3.4. Assemblies
 1. Source the venv: `. .venv/bin/activate`
